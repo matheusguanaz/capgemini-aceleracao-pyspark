@@ -27,9 +27,22 @@ def pergunta_1_qa(df):
 	return df
 
 
+def pergunta_1_tr(df):
 
-def pergunta_1(df):
-	print(df.filter(df.StockCode.startswith('gift_0001')).agg({'valor_de_venda' : 'sum'}).show())
+	df = df.withColumn('unitPrice', 
+								F.when(df['unitPrice_qa'] == 'F', 
+									F.regexp_replace('unitPrice', ',','\\.'))
+									.otherwise(F.col('unitPrice'))
+					)
+	
+	df = df.withColumn('unitPrice', F.col('unitPrice').cast('double'))
+
+	df = df.withColumn('valor_de_venda', F.col('unitPrice') * F.col('Quantity'))
+	
+	print(df.filter(df.unitPrice.isNull()).show())
+
+	return df
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -54,3 +67,4 @@ if __name__ == "__main__":
 	print(df.show())
 
 	df = pergunta_1_qa(df)
+	df = pergunta_1_tr(df)
