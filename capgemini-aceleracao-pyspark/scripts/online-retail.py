@@ -115,6 +115,45 @@ def pergunta_4(df):
 		.show()
 	)
 
+def pergunta_5_qa(df):
+
+	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
+
+	print(df.groupBy('InvoiceDate_qa').count().show()) 
+
+	return df
+	
+def pergunta_5_tr(df):
+
+	df = df.withColumn('InvoiceDate', 
+							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+
+	print(df.filter(df.InvoiceDate.isNull()).show())
+
+	return df
+
+def pergunta_5(df):
+	df = (
+		df
+		.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0))
+		.groupBy('StockCode', F.month('InvoiceDate'))
+		.sum('Quantity')
+		.orderBy(F.col('sum(Quantity)').desc())
+	)
+
+
+	df = df.select('StockCode',
+					F.col('month(InvoiceDate)').alias('month'),
+					F.col('sum(Quantity)').alias('sum_quantity'))
+	
+	df_max_per_month = df.groupBy('month').max('sum_quantity')
+
+	df_max_per_month = df_max_per_month.join(df.alias('b'), 
+											F.col('b.sum_quantity') == F.col('max(sum_quantity)'),
+											"left").select('b.month','StockCode','sum_quantity')
+	
+	print(df_max_per_month.orderBy('month').show())
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -148,4 +187,8 @@ if __name__ == "__main__":
 
 	#pergunta_3(df)
 
-	pergunta_4(df)
+	#pergunta_4(df)
+
+	df = pergunta_5_qa(df)
+	df = pergunta_5_tr(df)
+	pergunta_5(df)
