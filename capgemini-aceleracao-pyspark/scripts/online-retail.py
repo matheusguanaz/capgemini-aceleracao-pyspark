@@ -30,14 +30,14 @@ def pergunta_1_qa(df):
 def pergunta_1_tr(df):
 
 	df = df.withColumn('unitPrice', 
-								F.when(df['unitPrice_qa'] == 'F', 
-									F.regexp_replace('unitPrice', ',','\\.'))
-									.otherwise(F.col('unitPrice'))
+								F.when(df['UnitPrice_qa'] == 'F', 
+									F.regexp_replace('UnitPrice', ',','\\.'))
+									.otherwise(F.col('UnitPrice'))
 					)
 	
-	df = df.withColumn('unitPrice', F.col('unitPrice').cast('double'))
+	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
 
-	df = df.withColumn('valor_de_venda', F.col('unitPrice') * F.col('Quantity'))
+	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
 	
 	print(df.filter(df.unitPrice.isNull()).show())
 
@@ -52,7 +52,7 @@ def pergunta_1(df):
 
 def pergunta_2_qa(df):
 
-	df = df.withColumn("unitPrice_qa", 
+	df = df.withColumn("UnitPrice_qa", 
 						F.when(check_is_empty('UnitPrice'), 'M')
 						.when(F.col('UnitPrice').contains(','), 'F')
 						.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
@@ -65,7 +65,7 @@ def pergunta_2_qa(df):
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
 
-	print(df.groupBy('unitPrice_qa').count().show())
+	print(df.groupBy('UnitPrice_qa').count().show())
 	print(df.groupBy('StockCode_qa').count().show())	
 	print(df.groupBy('InvoiceDate_qa').count().show()) 
 
