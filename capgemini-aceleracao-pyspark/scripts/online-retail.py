@@ -12,8 +12,8 @@ def check_is_empty(col):
 def pergunta_1_qa(df):
 
 	df = df.withColumn('StockCode_qa', 
-						F.when(check_is_empty('StockCode'), 'M')
-						.when(F.length(df.StockCode) != 5, 'F'))
+					F.when(check_is_empty('StockCode'), 'M')
+					.when(F.length(df.StockCode) != 5, 'F'))
 
 	print(df.groupBy('StockCode_qa').count().show())
 
