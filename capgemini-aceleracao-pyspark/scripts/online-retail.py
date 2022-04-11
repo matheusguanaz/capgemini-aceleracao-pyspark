@@ -205,6 +205,56 @@ def pergunta_6(df):
 		.show()
 	)
 
+def pergunta_7_qa(df):
+
+	df = df.withColumn("UnitPrice_qa", 
+						F.when(check_is_empty('UnitPrice'), 'M')
+						.when(F.col('UnitPrice').contains(','), 'F')
+						.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
+	)
+
+	df = df.withColumn('StockCode_qa', 
+						F.when(check_is_empty('StockCode'), 'M')
+						.when(F.length(df.StockCode) != 5, 'F'))
+
+	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
+
+
+	print(df.groupBy('UnitPrice_qa').count().show())
+	print(df.groupBy('StockCode_qa').count().show())	
+	print(df.groupBy('InvoiceDate_qa').count().show()) 
+
+	return df
+
+def pergunta_7_tr(df):
+	df = df.withColumn('InvoiceDate', 
+							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+
+	print(df.filter(df.InvoiceDate.isNull()).show())
+
+	df = df.withColumn('UnitPrice', 
+							F.when(df['UnitPrice_qa'] == 'F', 
+								F.regexp_replace('UnitPrice', ',','\\.'))
+								.otherwise(F.col('UnitPrice'))
+				)
+	
+	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
+
+	print(df.filter(df.UnitPrice.isNull()).show())
+	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
+
+	return df
+
+def pergunta_7(df):
+	print(
+		df
+		.filter(df.valor_de_venda > 0)
+		.groupBy(F.month('InvoiceDate'))
+		.sum('valor_de_venda')
+		.orderBy(F.col('sum(valor_de_venda)').desc())
+		.show()
+	)
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -243,7 +293,10 @@ if __name__ == "__main__":
 	#df = pergunta_5_tr(df)
 	#pergunta_5(df)
 
-	df = pergunta_6_qa(df)
-	df = pergunta_6_tr(df)
-	pergunta_6(df)
+	#df = pergunta_6_qa(df)
+	#df = pergunta_6_tr(df)
+	#pergunta_6(df)
 
+	df = pergunta_7_qa(df)
+	df = pergunta_7_tr(df)
+	pergunta_7(df)
