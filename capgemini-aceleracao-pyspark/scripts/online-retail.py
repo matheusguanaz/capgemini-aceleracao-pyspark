@@ -11,35 +11,11 @@ def check_is_empty(col):
 
 def pergunta_1_qa(df):
 
-	df = df.withColumn("unitPrice_qa", 
-						F.when(check_is_empty('unitPrice'), 'M')
-						.when(F.col('unitPrice').contains(','), 'F')
-						.when(F.col('unitPrice').rlike('[^0-9]'), 'A')
-	)
-
 	df = df.withColumn('StockCode_qa', 
 						F.when(check_is_empty('StockCode'), 'M')
 						.when(F.length(df.StockCode) != 5, 'F'))
 
-	print(df.groupBy('unitPrice_qa').count().show())
 	print(df.groupBy('StockCode_qa').count().show())
-
-	return df
-
-
-def pergunta_1_tr(df):
-
-	df = df.withColumn('unitPrice', 
-								F.when(df['UnitPrice_qa'] == 'F', 
-									F.regexp_replace('UnitPrice', ',','\\.'))
-									.otherwise(F.col('UnitPrice'))
-					)
-	
-	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
-
-	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
-	
-	print(df.filter(df.unitPrice.isNull()).show())
 
 	return df
 
@@ -278,7 +254,6 @@ if __name__ == "__main__":
 	#print(df.show())
 
 	#df = pergunta_1_qa(df)
-	#df = pergunta_1_tr(df)
 	#pergunta_1(df)
 
 	#df = pergunta_2_qa(df)
