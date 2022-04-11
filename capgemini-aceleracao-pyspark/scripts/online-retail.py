@@ -53,9 +53,9 @@ def pergunta_1(df):
 def pergunta_2_qa(df):
 
 	df = df.withColumn("unitPrice_qa", 
-						F.when(check_is_empty('unitPrice'), 'M')
-						.when(F.col('unitPrice').contains(','), 'F')
-						.when(F.col('unitPrice').rlike('[^0-9]'), 'A')
+						F.when(check_is_empty('UnitPrice'), 'M')
+						.when(F.col('UnitPrice').contains(','), 'F')
+						.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
 	)
 
 	df = df.withColumn('StockCode_qa', 
@@ -155,6 +155,28 @@ def pergunta_5(df):
 	print(df_max_per_month.orderBy('month').show())
 
 
+def pergunta_6_qa(df):
+
+	df = df.withColumn("UnitPrice_qa", 
+						F.when(check_is_empty('UnitPrice'), 'M')
+						.when(F.col('UnitPrice').contains(','), 'F')
+						.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
+	)
+
+	df = df.withColumn('StockCode_qa', 
+						F.when(check_is_empty('StockCode'), 'M')
+						.when(F.length(df.StockCode) != 5, 'F'))
+
+	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
+
+
+	print(df.groupBy('UnitPrice_qa').count().show())
+	print(df.groupBy('StockCode_qa').count().show())	
+	print(df.groupBy('InvoiceDate_qa').count().show()) 
+
+	return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -189,6 +211,8 @@ if __name__ == "__main__":
 
 	#pergunta_4(df)
 
-	df = pergunta_5_qa(df)
-	df = pergunta_5_tr(df)
-	pergunta_5(df)
+	#df = pergunta_5_qa(df)
+	#df = pergunta_5_tr(df)
+	#pergunta_5(df)
+	df = pergunta_6_qa(df)
+
