@@ -48,6 +48,14 @@ def pergunta_1(df):
 	print(df.filter(df.StockCode.startswith('gift_0001')).agg({'valor_de_venda' : 'sum'}).show())
 
 
+def pergunta_2_qa(df):
+	
+	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
+	
+	print(df.groupBy('InvoiceDate_qa').count().show()) 
+
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -68,8 +76,10 @@ if __name__ == "__main__":
 		          .option("header", "true")
 		          .schema(schema_online_retail)
 		          .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/online-retail/online-retail.csv"))
-	print(df.show())
+	#print(df.show())
 
-	df = pergunta_1_qa(df)
-	df = pergunta_1_tr(df)
-	pergunta_1(df)
+	#df = pergunta_1_qa(df)
+	#df = pergunta_1_tr(df)
+	#pergunta_1(df)
+
+	df = pergunta_2_qa(df)
