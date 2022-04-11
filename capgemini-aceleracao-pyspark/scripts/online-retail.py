@@ -42,7 +42,7 @@ def pergunta_2_qa(df):
 def pergunta_2_tr(df):
 	
 	df = df.withColumn('InvoiceDate', 
-							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
 	print(df.filter(df.InvoiceDate.isNull()).show())
 
@@ -85,7 +85,7 @@ def pergunta_5_qa(df):
 def pergunta_5_tr(df):
 
 	df = df.withColumn('InvoiceDate', 
-							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
 	print(df.filter(df.InvoiceDate.isNull()).show())
 
@@ -102,14 +102,14 @@ def pergunta_5(df):
 
 
 	df = df.select('StockCode',
-					F.col('month(InvoiceDate)').alias('month'),
-					F.col('sum(Quantity)').alias('sum_quantity'))
+				F.col('month(InvoiceDate)').alias('month'),
+				F.col('sum(Quantity)').alias('sum_quantity'))
 	
 	df_max_per_month = df.groupBy('month').max('sum_quantity')
 
 	df_max_per_month = df_max_per_month.join(df.alias('b'), 
-											F.col('b.sum_quantity') == F.col('max(sum_quantity)'),
-											"left").select('b.month','StockCode','sum_quantity')
+								F.col('b.sum_quantity') == F.col('max(sum_quantity)'),
+								"left").select('b.month','StockCode','sum_quantity')
 	
 	print(df_max_per_month.orderBy('month').show())
 
@@ -117,14 +117,14 @@ def pergunta_5(df):
 def pergunta_6_qa(df):
 
 	df = df.withColumn("UnitPrice_qa", 
-						F.when(check_is_empty('UnitPrice'), 'M')
-						.when(F.col('UnitPrice').contains(','), 'F')
-						.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
+					F.when(check_is_empty('UnitPrice'), 'M')
+					.when(F.col('UnitPrice').contains(','), 'F')
+					.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
 	)
 
 	df = df.withColumn('StockCode_qa', 
-						F.when(check_is_empty('StockCode'), 'M')
-						.when(F.length(df.StockCode) != 5, 'F'))
+					F.when(check_is_empty('StockCode'), 'M')
+					.when(F.length(df.StockCode) != 5, 'F'))
 
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
@@ -137,14 +137,14 @@ def pergunta_6_qa(df):
 
 def pergunta_6_tr(df):
 	df = df.withColumn('InvoiceDate', 
-							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
 	print(df.filter(df.InvoiceDate.isNull()).show())
 
 	df = df.withColumn('UnitPrice', 
-							F.when(df['UnitPrice_qa'] == 'F', 
-								F.regexp_replace('UnitPrice', ',','\\.'))
-								.otherwise(F.col('UnitPrice'))
+					F.when(df['UnitPrice_qa'] == 'F', 
+						F.regexp_replace('UnitPrice', ',','\\.'))
+					.otherwise(F.col('UnitPrice'))
 				)
 	
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
@@ -167,14 +167,14 @@ def pergunta_6(df):
 def pergunta_7_qa(df):
 
 	df = df.withColumn("UnitPrice_qa", 
-						F.when(check_is_empty('UnitPrice'), 'M')
-						.when(F.col('UnitPrice').contains(','), 'F')
-						.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
+					F.when(check_is_empty('UnitPrice'), 'M')
+					.when(F.col('UnitPrice').contains(','), 'F')
+					.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
 	)
 
 	df = df.withColumn('StockCode_qa', 
-						F.when(check_is_empty('StockCode'), 'M')
-						.when(F.length(df.StockCode) != 5, 'F'))
+					F.when(check_is_empty('StockCode'), 'M')
+					.when(F.length(df.StockCode) != 5, 'F'))
 
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
@@ -187,14 +187,14 @@ def pergunta_7_qa(df):
 
 def pergunta_7_tr(df):
 	df = df.withColumn('InvoiceDate', 
-							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
 	print(df.filter(df.InvoiceDate.isNull()).show())
 
 	df = df.withColumn('UnitPrice', 
-							F.when(df['UnitPrice_qa'] == 'F', 
-								F.regexp_replace('UnitPrice', ',','\\.'))
-								.otherwise(F.col('UnitPrice'))
+					F.when(df['UnitPrice_qa'] == 'F', 
+						F.regexp_replace('UnitPrice', ',','\\.'))
+					.otherwise(F.col('UnitPrice'))
 				)
 	
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
