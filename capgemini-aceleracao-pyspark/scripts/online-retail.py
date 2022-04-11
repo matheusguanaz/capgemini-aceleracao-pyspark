@@ -45,7 +45,7 @@ def pergunta_1_tr(df):
 
 
 def pergunta_1(df):
-	print(df.filter(df.StockCode.startswith('gift_0001')).agg({'valor_de_venda' : 'sum'}).show())
+	print(df.filter(df.StockCode.startswith('gift_0001')).agg({'Quantity' : 'sum'}).show())
 
 
 def pergunta_2_qa(df):
@@ -93,10 +93,14 @@ def pergunta_2_tr(df):
 def pergunta_2(df):
 	(df.filter(df.StockCode.startswith('gift_0001'))
 	.groupBy(F.month('InvoiceDate'))
-	.sum('valor_de_venda')
+	.sum('Quantity')
 	.show())
 	
 
+def pergunta_3(df):
+	print(df.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
+	.groupBy('StockCode').sum('Quantity')
+	.show())	
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -124,6 +128,8 @@ if __name__ == "__main__":
 	#df = pergunta_1_tr(df)
 	#pergunta_1(df)
 
-	df = pergunta_2_qa(df)
-	df = pergunta_2_tr(df)
-	pergunta_2(df)
+	#df = pergunta_2_qa(df)
+	#df = pergunta_2_tr(df)
+	#pergunta_2(df)
+
+	pergunta_3(df)
