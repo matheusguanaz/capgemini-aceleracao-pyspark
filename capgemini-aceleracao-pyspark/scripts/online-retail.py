@@ -44,6 +44,10 @@ def pergunta_1_tr(df):
 	return df
 
 
+def pergunta_1(df):
+	print(df.filter(df.StockCode.startswith('gift_0001')).agg({'valor_de_venda' : 'sum'}).show())
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -68,3 +72,4 @@ if __name__ == "__main__":
 
 	df = pergunta_1_qa(df)
 	df = pergunta_1_tr(df)
+	pergunta_1(df)
