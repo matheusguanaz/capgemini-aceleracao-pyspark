@@ -195,6 +195,15 @@ def pergunta_6_tr(df):
 
 	return df
 
+def pergunta_6(df):
+	print(
+		df
+		.filter(df.valor_de_venda > 0)
+		.groupBy(F.hour('InvoiceDate'))
+		.sum('valor_de_venda')
+		.orderBy(F.col('sum(valor_de_venda)').desc())
+		.show()
+	)
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -233,6 +242,8 @@ if __name__ == "__main__":
 	#df = pergunta_5_qa(df)
 	#df = pergunta_5_tr(df)
 	#pergunta_5(df)
+
 	df = pergunta_6_qa(df)
 	df = pergunta_6_tr(df)
+	pergunta_6(df)
 
