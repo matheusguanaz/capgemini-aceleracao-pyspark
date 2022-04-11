@@ -54,6 +54,19 @@ def pergunta_2_qa(df):
 	
 	print(df.groupBy('InvoiceDate_qa').count().show()) 
 
+	return df
+
+
+def pergunta_2_tr(df):
+	
+
+	df = df.withColumn('InvoiceDate', 
+							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+
+	print(df.filter(df.InvoiceDate.isNull()).show())
+
+	return df
+
 
 
 if __name__ == "__main__":
@@ -83,3 +96,4 @@ if __name__ == "__main__":
 	#pergunta_1(df)
 
 	df = pergunta_2_qa(df)
+	df = pergunta_2_tr(df)
