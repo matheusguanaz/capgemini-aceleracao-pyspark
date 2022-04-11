@@ -49,9 +49,22 @@ def pergunta_1(df):
 
 
 def pergunta_2_qa(df):
-	
+
+	df = df.withColumn("unitPrice_qa", 
+						F.when(check_is_empty('unitPrice'), 'M')
+						.when(F.col('unitPrice').contains(','), 'F')
+						.when(F.col('unitPrice').rlike('[^0-9]'), 'A')
+	)
+
+	df = df.withColumn('StockCode_qa', 
+						F.when(check_is_empty('StockCode'), 'M')
+						.when(F.length(df.StockCode) != 5, 'F'))
+
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
-	
+
+
+	print(df.groupBy('unitPrice_qa').count().show())
+	print(df.groupBy('StockCode_qa').count().show())	
 	print(df.groupBy('InvoiceDate_qa').count().show()) 
 
 	return df
@@ -65,8 +78,24 @@ def pergunta_2_tr(df):
 
 	print(df.filter(df.InvoiceDate.isNull()).show())
 
+	df = df.withColumn('UnitPrice', 
+							F.when(df['UnitPrice_qa'] == 'F', 
+								F.regexp_replace('UnitPrice', ',','\\.'))
+								.otherwise(F.col('UnitPrice'))
+				)
+	
+	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
+
+	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
+
 	return df
 
+def pergunta_2(df):
+	(df.filter(df.StockCode.startswith('gift_0001'))
+	.groupBy(F.month('InvoiceDate'))
+	.sum('valor_de_venda')
+	.show())
+	
 
 
 if __name__ == "__main__":
@@ -97,3 +126,4 @@ if __name__ == "__main__":
 
 	df = pergunta_2_qa(df)
 	df = pergunta_2_tr(df)
+	pergunta_2(df)
