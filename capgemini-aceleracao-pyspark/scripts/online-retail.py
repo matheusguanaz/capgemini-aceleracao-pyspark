@@ -176,6 +176,25 @@ def pergunta_6_qa(df):
 
 	return df
 
+def pergunta_6_tr(df):
+	df = df.withColumn('InvoiceDate', 
+							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
+
+	print(df.filter(df.InvoiceDate.isNull()).show())
+
+	df = df.withColumn('UnitPrice', 
+							F.when(df['UnitPrice_qa'] == 'F', 
+								F.regexp_replace('UnitPrice', ',','\\.'))
+								.otherwise(F.col('UnitPrice'))
+				)
+	
+	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
+
+	print(df.filter(df.UnitPrice.isNull()).show())
+	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
+
+	return df
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -215,4 +234,5 @@ if __name__ == "__main__":
 	#df = pergunta_5_tr(df)
 	#pergunta_5(df)
 	df = pergunta_6_qa(df)
+	df = pergunta_6_tr(df)
 
