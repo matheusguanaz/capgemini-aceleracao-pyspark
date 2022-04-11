@@ -3,6 +3,34 @@ from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
+REGEX_EMPTY_STR = r'[\t ]+$'
+REGEX_ISNOT_NUM = r'[^0-9]*'
+
+def check_is_empty(col):
+	return (F.col(col).isNull() | (F.col(col) == '') | F.col(col).rlike(REGEX_EMPTY_STR))
+
+def pergunta_1_qa(df):
+
+	df = df.withColumn("unitPrice_qa", 
+						F.when(check_is_empty('unitPrice'), 'M')
+						.when(F.col('unitPrice').contains(','), 'F')
+						.when(F.col('unitPrice').rlike('[^0-9]'), 'A')
+	)
+
+	df = df.withColumn('StockCode_qa', 
+						F.when(check_is_empty('StockCode'), 'M')
+						.when(F.length(df.StockCode) != 5, 'F'))
+
+	print(df.groupBy('unitPrice_qa').count().show())
+	print(df.groupBy('StockCode_qa').count().show())
+
+	return df
+
+
+
+def pergunta_1(df):
+	print(df.filter(df.StockCode.startswith('gift_0001')).agg({'valor_de_venda' : 'sum'}).show())
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -25,3 +53,4 @@ if __name__ == "__main__":
 		          .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/online-retail/online-retail.csv"))
 	print(df.show())
 
+	df = pergunta_1_qa(df)
