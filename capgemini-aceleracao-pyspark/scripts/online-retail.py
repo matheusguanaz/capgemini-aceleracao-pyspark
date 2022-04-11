@@ -28,21 +28,8 @@ def pergunta_1(df):
 
 def pergunta_2_qa(df):
 
-	df = df.withColumn("UnitPrice_qa", 
-						F.when(check_is_empty('UnitPrice'), 'M')
-						.when(F.col('UnitPrice').contains(','), 'F')
-						.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
-	)
-
-	df = df.withColumn('StockCode_qa', 
-						F.when(check_is_empty('StockCode'), 'M')
-						.when(F.length(df.StockCode) != 5, 'F'))
-
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
-
-	print(df.groupBy('UnitPrice_qa').count().show())
-	print(df.groupBy('StockCode_qa').count().show())	
 	print(df.groupBy('InvoiceDate_qa').count().show()) 
 
 	return df
@@ -50,21 +37,10 @@ def pergunta_2_qa(df):
 
 def pergunta_2_tr(df):
 	
-
 	df = df.withColumn('InvoiceDate', 
 							F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
 	print(df.filter(df.InvoiceDate.isNull()).show())
-
-	df = df.withColumn('UnitPrice', 
-							F.when(df['UnitPrice_qa'] == 'F', 
-								F.regexp_replace('UnitPrice', ',','\\.'))
-								.otherwise(F.col('UnitPrice'))
-				)
-	
-	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
-
-	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
 
 	return df
 
