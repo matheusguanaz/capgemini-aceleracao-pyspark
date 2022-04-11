@@ -102,7 +102,19 @@ def pergunta_2(df):
 def pergunta_3(df):
 	print(df.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
 	.groupBy('StockCode').sum('Quantity')
-	.show())	
+	.show())
+
+
+def pergunta_4(df):
+	print(
+		df
+		.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0))
+		.groupBy('StockCode')
+		.sum('Quantity')
+		.orderBy(F.col('sum(Quantity)').desc())
+		.show()
+	)
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -134,4 +146,6 @@ if __name__ == "__main__":
 	#df = pergunta_2_tr(df)
 	#pergunta_2(df)
 
-	pergunta_3(df)
+	#pergunta_3(df)
+
+	pergunta_4(df)
