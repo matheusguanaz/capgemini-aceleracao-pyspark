@@ -45,7 +45,9 @@ def pergunta_1_tr(df):
 
 
 def pergunta_1(df):
-	print(df.filter(df.StockCode.startswith('gift_0001')).agg({'Quantity' : 'sum'}).show())
+	print(df.filter(df.StockCode.startswith('gift_0001') & ~df.InvoiceNo.startswith('C'))
+	.agg({'Quantity' : 'sum'})
+	.show())
 
 
 def pergunta_2_qa(df):
@@ -91,7 +93,7 @@ def pergunta_2_tr(df):
 	return df
 
 def pergunta_2(df):
-	(df.filter(df.StockCode.startswith('gift_0001'))
+	(df.filter(df.StockCode.startswith('gift_0001') & ~df.InvoiceNo.startswith('C'))
 	.groupBy(F.month('InvoiceDate'))
 	.sum('Quantity')
 	.show())
