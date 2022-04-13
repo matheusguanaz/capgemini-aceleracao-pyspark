@@ -442,7 +442,26 @@ def pergunta_10_qa(df):
 	return df
 
 
+def pergunta_10_tr(df):
 
+	df = df.withColumn('UnitPrice', 
+				F.when(df['UnitPrice_qa'] == 'F', 
+					F.regexp_replace('UnitPrice', ',','\\.'))
+				.otherwise(F.col('UnitPrice'))
+				)
+	
+	df = df.withColumn('Quantity',
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
+
+	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
+
+	df.filter(F.col('UnitPrice').isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
+
+	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
+
+	return df
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -503,3 +522,4 @@ if __name__ == "__main__":
 	#pergunta_9(df)
 
 	df = pergunta_10_qa(df)
+	df = pergunta_10_tr(df)
