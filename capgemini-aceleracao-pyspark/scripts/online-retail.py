@@ -32,13 +32,13 @@ def pergunta_1_tr(df):
 
 def pergunta_1(df):
 
-	print(
-		df
-		.filter((F.col('StockCode').startswith('gift_0001')) & #Apenas gift cards
-				(~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas 
-				(F.col('Quantity') > 0)) #Apenas vendas que valores que entraram em caixa
-		.agg({'Quantity' : 'sum'})
-		.show())
+	
+	(df
+	.filter((F.col('StockCode').startswith('gift_0001')) & #Apenas gift cards
+			(~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas 
+			(F.col('Quantity') > 0)) #Apenas vendas que valores que entraram em caixa
+	.agg({'Quantity' : 'sum'})
+	.show())
 
 
 def pergunta_2_qa(df):
