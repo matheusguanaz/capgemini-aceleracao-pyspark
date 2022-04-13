@@ -12,13 +12,22 @@ def check_is_empty(col):
 def pergunta_1_qa(df):
 
 	df = df.withColumn('Quantity_qa', 
-					F.when(F.col('Quantity').isNull(), 'M')
-					)
-					
+					F.when(F.col('Quantity').isNull(), 'M'))
+
 	df.groupBy('Quantity_qa').count().show()
 
 	return df
 
+
+def pergunta_1_tr(df):
+
+	df = df.withColumn('Quantity',
+					F.when(F.col('Quantity_qa') == 'M', 0)
+					.otherwise(F.col('Quantity')))
+
+	df.filter(F.col('Quantity').isNull()).show()
+
+	return df
 
 def pergunta_1(df):
 	print(
@@ -275,6 +284,7 @@ if __name__ == "__main__":
 	#print(df.show())
 
 	df = pergunta_1_qa(df)
+	df = pergunta_1_tr(df)
 	pergunta_1(df)
 
 	#df = pergunta_2_qa(df)
