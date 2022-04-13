@@ -22,8 +22,8 @@ def pergunta_1_qa(df):
 def pergunta_1_tr(df):
 
 	df = df.withColumn('Quantity',
-					F.when(F.col('Quantity_qa') == 'M', 0)
-					.otherwise(F.col('Quantity')))
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
 
 	df.filter(F.col('Quantity').isNull()).show()
 
@@ -57,8 +57,8 @@ def pergunta_2_qa(df):
 def pergunta_2_tr(df):
 	
 	df = df.withColumn('Quantity',
-					F.when(F.col('Quantity_qa') == 'M', 0)
-					.otherwise(F.col('Quantity')))
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
 
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
@@ -101,8 +101,8 @@ def pergunta_3_qa(df):
 def pergunta_3_tr(df):
 
 	df = df.withColumn('Quantity',
-					F.when(F.col('Quantity_qa') == 'M', 0)
-					.otherwise(F.col('Quantity')))
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
 	
 	df.filter(df.Quantity.isNull()).show()
 
@@ -128,8 +128,8 @@ def pergunta_4_qa(df):
 def pergunta_4_tr(df):
 
 	df = df.withColumn('Quantity',
-					F.when(F.col('Quantity_qa') == 'M', 0)
-					.otherwise(F.col('Quantity')))
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
 
 	df.filter(df.Quantity.isNull()).show()
 
@@ -166,8 +166,8 @@ def pergunta_5_tr(df):
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
 	df = df.withColumn('Quantity',
-					F.when(F.col('Quantity_qa') == 'M', 0)
-					.otherwise(F.col('Quantity')))
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
 
 	df.filter(df.InvoiceDate.isNull()).show()
 	df.filter(df.Quantity.isNull()).show()
@@ -228,9 +228,9 @@ def pergunta_6_tr(df):
 	df.filter(df.InvoiceDate.isNull()).show()
 
 	df = df.withColumn('UnitPrice', 
-					F.when(df['UnitPrice_qa'] == 'F', 
-						F.regexp_replace('UnitPrice', ',','\\.'))
-					.otherwise(F.col('UnitPrice'))
+				F.when(df['UnitPrice_qa'] == 'F', 
+					F.regexp_replace('UnitPrice', ',','\\.'))
+				.otherwise(F.col('UnitPrice'))
 				)
 	
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
@@ -238,8 +238,8 @@ def pergunta_6_tr(df):
 	df.filter(df.UnitPrice.isNull()).show()
 
 	df = df.withColumn('Quantity',
-					F.when(F.col('Quantity_qa') == 'M', 0)
-					.otherwise(F.col('Quantity')))
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
 
 	df.filter(df.Quantity.isNull()).show()
 
@@ -287,14 +287,14 @@ def pergunta_7_tr(df):
 	df.filter(df.InvoiceDate.isNull()).show()
 
 	df = df.withColumn('UnitPrice', 
-					F.when(df['UnitPrice_qa'] == 'F', 
-						F.regexp_replace('UnitPrice', ',','\\.'))
-					.otherwise(F.col('UnitPrice'))
+				F.when(df['UnitPrice_qa'] == 'F', 
+					F.regexp_replace('UnitPrice', ',','\\.'))
+				.otherwise(F.col('UnitPrice'))
 				)
 	
 	df = df.withColumn('Quantity',
-					F.when(F.col('Quantity_qa') == 'M', 0)
-					.otherwise(F.col('Quantity')))
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
 
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
 
