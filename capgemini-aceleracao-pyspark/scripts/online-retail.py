@@ -82,20 +82,18 @@ def pergunta_2(df):
 	
 
 def pergunta_3_qa(df):
-	
-	print(
-		df
-		.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
-		.groupBy('StockCode')
-		.count()
-		.show()
-		)
 
-	print(
-		df
-		.filter(df.Quantity.isNull())
-		.show()
-	)
+	df = df.withColumn('Quantity_qa', 
+					F.when(F.col('Quantity').isNull(), 'M'))
+	
+	(df
+	.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
+	.groupBy('StockCode')
+	.count()
+	.show())
+
+	df.filter(df.Quantity.isNull()).show()
+	df.groupBy('Quantity_qa').count().show()
 
 	return df
 
@@ -301,12 +299,12 @@ if __name__ == "__main__":
 	#df = pergunta_1_tr(df)
 	#pergunta_1(df)
 
-	df = pergunta_2_qa(df)
-	df = pergunta_2_tr(df)
-	pergunta_2(df)
+	#df = pergunta_2_qa(df)
+	#df = pergunta_2_tr(df)
+	#pergunta_2(df)
 
-	#df = pergunta_3_qa(df)
-	#pergunta_3(df)
+	df = pergunta_3_qa(df)
+	pergunta_3(df)
 
 	#df = pergunta_4_qa(df)
 	#df = pergunta_4_tr(df)
