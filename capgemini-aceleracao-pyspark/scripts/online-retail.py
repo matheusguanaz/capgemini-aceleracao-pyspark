@@ -34,9 +34,9 @@ def pergunta_1(df):
 
 	print(
 		df
-		.filter((df.StockCode.startswith('gift_0001')) & 
-				(~df.InvoiceNo.startswith('C')) &
-				(df.Quantity > 0))
+		.filter((F.col('StockCode').startswith('gift_0001')) & 
+				(~F.col('InvoiceNo').startswith('C')) &
+				(F.col('Quantity') > 0))
 		.agg({'Quantity' : 'sum'})
 		.show())
 
@@ -63,8 +63,8 @@ def pergunta_2_tr(df):
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
-	df.filter(df.Quantity.isNull()).show()
-	df.filter(df.InvoiceDate.isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
+	df.filter(F.col('InvoiceDate').isNull()).show()
 
 	return df
 
@@ -72,9 +72,9 @@ def pergunta_2_tr(df):
 def pergunta_2(df):
 	
 	(df
-	.filter((df.StockCode.startswith('gift_0001')) & 
-			(~df.InvoiceNo.startswith('C')) &
-			(df.Quantity > 0))
+	.filter((F.col('StockCode').startswith('gift_0001')) & 
+			(~F.col('InvoiceNo').startswith('C')) &
+			(F.col('Quantity') > 0))
 	.groupBy(F.month('InvoiceDate'))
 	.sum('Quantity')
 	.orderBy('month(InvoiceDate)')
@@ -87,12 +87,12 @@ def pergunta_3_qa(df):
 					F.when(F.col('Quantity').isNull(), 'M'))
 	
 	(df
-	.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
+	.filter(F.col('StockCode').startswith('S') & ~F.col('InvoiceNo').startswith('C'))
 	.groupBy('StockCode')
 	.count()
 	.show())
 
-	df.filter(df.Quantity.isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
 	df.groupBy('Quantity_qa').count().show()
 
 	return df
@@ -104,7 +104,7 @@ def pergunta_3_tr(df):
 				F.when(F.col('Quantity_qa') == 'M', 0)
 				.otherwise(F.col('Quantity')))
 	
-	df.filter(df.Quantity.isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
 
 	return df
 
@@ -112,14 +112,14 @@ def pergunta_3_tr(df):
 def pergunta_3(df):
 
 	(df
-	.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
+	.filter(F.col('StockCode').startswith('S') & ~F.col('InvoiceNo').startswith('C'))
 	.groupBy('StockCode').sum('Quantity')
 	.show())
 
 
 def pergunta_4_qa(df):
 
-	df.filter(df.Quantity.isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
 	df = df.withColumn('Quantity_qa',
 					F.when(F.col('Quantity').isNull(), 'M'))
 
@@ -131,7 +131,7 @@ def pergunta_4_tr(df):
 				F.when(F.col('Quantity_qa') == 'M', 0)
 				.otherwise(F.col('Quantity')))
 
-	df.filter(df.Quantity.isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
 
 	return df
 
@@ -139,7 +139,7 @@ def pergunta_4_tr(df):
 def pergunta_4(df):
 
 	(df
-	.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0) & (df.StockCode != 'PADS'))
+	.filter((~F.col('InvoiceNo').startswith('C')) & (F.col('Quantity') > 0) & (F.col('StockCode') != 'PADS'))
 	.groupBy('StockCode')
 	.sum('Quantity')
 	.orderBy(F.col('sum(Quantity)').desc())
@@ -169,8 +169,8 @@ def pergunta_5_tr(df):
 				F.when(F.col('Quantity_qa') == 'M', 0)
 				.otherwise(F.col('Quantity')))
 
-	df.filter(df.InvoiceDate.isNull()).show()
-	df.filter(df.Quantity.isNull()).show()
+	df.filter(F.col('InvoiceDate').isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
 
 	return df
 
@@ -179,7 +179,7 @@ def pergunta_5(df):
 
 	df = (
 		df
-		.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0) & (df.StockCode != 'PADS'))
+		.filter((~F.col('InvoiceNo').startswith('C')) & (F.col('Quantity') > 0) & (F.col('StockCode') != 'PADS'))
 		.groupBy('StockCode', F.month('InvoiceDate'))
 		.sum('Quantity')
 		.orderBy(F.col('sum(Quantity)').desc())
@@ -225,7 +225,7 @@ def pergunta_6_tr(df):
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
-	df.filter(df.InvoiceDate.isNull()).show()
+	df.filter(F.col('InvoiceDate').isNull()).show()
 
 	df = df.withColumn('UnitPrice', 
 				F.when(df['UnitPrice_qa'] == 'F', 
@@ -235,13 +235,13 @@ def pergunta_6_tr(df):
 	
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
 
-	df.filter(df.UnitPrice.isNull()).show()
+	df.filter(F.col('UnitPrice').isNull()).show()
 
 	df = df.withColumn('Quantity',
 				F.when(F.col('Quantity_qa') == 'M', 0)
 				.otherwise(F.col('Quantity')))
 
-	df.filter(df.Quantity.isNull()).show()
+	df.filter(F.col('Quantity.').isNull()).show()
 
 	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
 
@@ -251,7 +251,7 @@ def pergunta_6_tr(df):
 def pergunta_6(df):
 	
 	(df
-	.filter(df.valor_de_venda > 0 & (df.StockCode != 'PADS'))
+	.filter(F.col('valor_de_venda') > 0 & (F.col('StockCode') != 'PADS'))
 	.groupBy(F.hour('InvoiceDate'))
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
@@ -284,7 +284,7 @@ def pergunta_7_tr(df):
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
-	df.filter(df.InvoiceDate.isNull()).show()
+	df.filter(F.col('InvoiceDate').isNull()).show()
 
 	df = df.withColumn('UnitPrice', 
 				F.when(df['UnitPrice_qa'] == 'F', 
@@ -298,8 +298,8 @@ def pergunta_7_tr(df):
 
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
 
-	df.filter(df.UnitPrice.isNull()).show()
-	df.filter(df.Quantity.isNull()).show()
+	df.filter(F.col('UnitPrice').isNull()).show()
+	df.filter(F.col('Quantity').isNull()).show()
 	
 	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
 
@@ -309,7 +309,7 @@ def pergunta_7_tr(df):
 def pergunta_7(df):
 	
 	(df
-	.filter(df.valor_de_venda > 0 & (df.StockCode != 'PADS'))
+	.filter(F.col('valor_de_venda') > 0 & (F.col('StockCode') != 'PADS'))
 	.groupBy(F.month('InvoiceDate'))
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
