@@ -11,11 +11,11 @@ def check_is_empty(col):
 
 def pergunta_1_qa(df):
 
-	df = df.withColumn('StockCode_qa', 
-					F.when(check_is_empty('StockCode'), 'M')
-					.when(F.length(df.StockCode) != 5, 'F'))
-
-	print(df.groupBy('StockCode_qa').count().show())
+	df = df.withColumn('Quantity_qa', 
+					F.when(F.col('Quantity').isNull(), 'M')
+					)
+					
+	df.groupBy('Quantity_qa').count().show()
 
 	return df
 
@@ -274,8 +274,8 @@ if __name__ == "__main__":
 		          .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/online-retail/online-retail.csv"))
 	#print(df.show())
 
-	#df = pergunta_1_qa(df)
-	#pergunta_1(df)
+	df = pergunta_1_qa(df)
+	pergunta_1(df)
 
 	#df = pergunta_2_qa(df)
 	#df = pergunta_2_tr(df)
