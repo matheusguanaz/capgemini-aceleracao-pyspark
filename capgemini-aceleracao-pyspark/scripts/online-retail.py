@@ -108,8 +108,11 @@ def pergunta_3_tr(df):
 
 	return df
 
+
 def pergunta_3(df):
-	print(df.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
+
+	(df
+	.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
 	.groupBy('StockCode').sum('Quantity')
 	.show())
 
