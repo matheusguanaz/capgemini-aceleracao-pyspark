@@ -90,6 +90,16 @@ def pergunta_4_qa(df):
 
 	return df
 
+def pergunta_4_tr(df):
+
+	df = df.withColumn('Quantity',
+						F.when(F.col('Quantity_qa') == 'M', 0)
+						.otherwise(F.col('Quantity')))
+
+	df.filter(df.Quantity.isNull()).show()
+
+	return df
+
 
 def pergunta_4(df):
 
@@ -274,7 +284,8 @@ if __name__ == "__main__":
 	#df = pergunta_3_qa(df)
 	#pergunta_3(df)
 
-	df = pergunta_4_qa(df)
+	#df = pergunta_4_qa(df)
+	#df = pergunta_4_tr(df)
 	#pergunta_4(df)
 
 	#df = pergunta_5_qa(df)
