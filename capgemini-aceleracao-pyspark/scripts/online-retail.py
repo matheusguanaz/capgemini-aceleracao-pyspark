@@ -257,6 +257,7 @@ def pergunta_6(df):
 	.orderBy(F.col('sum(valor_de_venda)').desc())
 	.show())
 
+
 def pergunta_7_qa(df):
 
 	df = df.withColumn("UnitPrice_qa", 
@@ -277,11 +278,13 @@ def pergunta_7_qa(df):
 
 	return df
 
+
 def pergunta_7_tr(df):
+
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
-	print(df.filter(df.InvoiceDate.isNull()).show())
+	df.filter(df.InvoiceDate.isNull()).show()
 
 	df = df.withColumn('UnitPrice', 
 					F.when(df['UnitPrice_qa'] == 'F', 
@@ -289,12 +292,19 @@ def pergunta_7_tr(df):
 					.otherwise(F.col('UnitPrice'))
 				)
 	
+	df = df.withColumn('Quantity',
+						F.when(F.col('Quantity_qa') == 'M', 0)
+						.otherwise(F.col('Quantity')))
+
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
 
-	print(df.filter(df.UnitPrice.isNull()).show())
+	df.filter(df.UnitPrice.isNull()).show()
+	df.filter(df.Quantity.isNull()).show()
+	
 	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
 
 	return df
+
 
 def pergunta_7(df):
 	print(
