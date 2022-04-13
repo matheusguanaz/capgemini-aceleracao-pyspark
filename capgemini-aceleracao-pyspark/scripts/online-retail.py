@@ -138,14 +138,12 @@ def pergunta_4_tr(df):
 
 def pergunta_4(df):
 
-	print(
-		df
-		.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0))
-		.groupBy('StockCode')
-		.sum('Quantity')
-		.orderBy(F.col('sum(Quantity)').desc())
-		.show()
-	)
+	(df
+	.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0))
+	.groupBy('StockCode')
+	.sum('Quantity')
+	.orderBy(F.col('sum(Quantity)').desc())
+	.show())
 
 def pergunta_5_qa(df):
 
@@ -317,11 +315,11 @@ if __name__ == "__main__":
 	#df = pergunta_2_tr(df)
 	#pergunta_2(df)
 
-	df = pergunta_3_qa(df)
-	df = pergunta_3_tr(df)
-	pergunta_3(df)
+	#df = pergunta_3_qa(df)
+	#df = pergunta_3_tr(df)
+	#pergunta_3(df)
 
-	#df = pergunta_4_qa(df)
+	df = pergunta_4_qa(df)
 	#df = pergunta_4_tr(df)
 	#pergunta_4(df)
 
