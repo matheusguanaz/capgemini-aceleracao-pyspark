@@ -29,7 +29,9 @@ def pergunta_1_tr(df):
 
 	return df
 
+
 def pergunta_1(df):
+	
 	print(
 		df
 		.filter((df.StockCode.startswith('gift_0001')) & 
@@ -54,10 +56,15 @@ def pergunta_2_qa(df):
 
 def pergunta_2_tr(df):
 	
+	df = df.withColumn('Quantity',
+					F.when(F.col('Quantity_qa') == 'M', 0)
+					.otherwise(F.col('Quantity')))
+
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
-	print(df.filter(df.InvoiceDate.isNull()).show())
+	df.filter(df.Quantity.isNull()).show()
+	df.filter(df.InvoiceDate.isNull()).show()
 
 	return df
 
