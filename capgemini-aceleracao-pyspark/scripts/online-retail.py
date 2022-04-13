@@ -425,6 +425,25 @@ def pergunta_9(df):
 	.show(1))
 
 
+def pergunta_10_qa(df):
+
+	df = df.withColumn("UnitPrice_qa", 
+					F.when(check_is_empty('UnitPrice'), 'M')
+					.when(F.col('UnitPrice').contains(','), 'F')
+					.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
+	)
+
+	df = df.withColumn('Quantity_qa',
+					F.when(F.col('Quantity').isNull(), 'M'))
+
+	df.groupBy('UnitPrice_qa').count().show()
+	df.groupBy('Quantity_qa').count().show()	
+
+	return df
+
+
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -479,6 +498,8 @@ if __name__ == "__main__":
 	#df = pergunta_8_tr(df)
 	#pergunta_8(df)
 
-	df = pergunta_9_qa(df)
-	df = pergunta_9_tr(df)
-	pergunta_9(df)
+	#df = pergunta_9_qa(df)
+	#df = pergunta_9_tr(df)
+	#pergunta_9(df)
+
+	df = pergunta_10_qa(df)
