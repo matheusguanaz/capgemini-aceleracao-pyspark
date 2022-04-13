@@ -386,11 +386,11 @@ def pergunta_9_qa(df):
 	df = df.withColumn('Quantity_qa',
 					F.when(F.col('Quantity').isNull(), 'M'))
 
-	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
-
 	df.groupBy('UnitPrice_qa').count().show()
 	df.groupBy('Quantity_qa').count().show()	
-	df.groupBy('InvoiceDate_qa').count().show() 
+
+	return df
+	 
 
 
 
@@ -450,3 +450,4 @@ if __name__ == "__main__":
 	#pergunta_8(df)
 
 	df = pergunta_9_qa(df)
+	df = pergunta_9_tr(df)
