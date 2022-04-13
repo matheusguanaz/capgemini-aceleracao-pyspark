@@ -139,7 +139,7 @@ def pergunta_4_tr(df):
 def pergunta_4(df):
 
 	(df
-	.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0))
+	.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0) & (df.StockCode != 'PADS'))
 	.groupBy('StockCode')
 	.sum('Quantity')
 	.orderBy(F.col('sum(Quantity)').desc())
@@ -179,7 +179,7 @@ def pergunta_5(df):
 
 	df = (
 		df
-		.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0))
+		.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0) & (df.StockCode != 'PADS'))
 		.groupBy('StockCode', F.month('InvoiceDate'))
 		.sum('Quantity')
 		.orderBy(F.col('sum(Quantity)').desc())
@@ -251,7 +251,7 @@ def pergunta_6_tr(df):
 def pergunta_6(df):
 	
 	(df
-	.filter(df.valor_de_venda > 0)
+	.filter(df.valor_de_venda > 0 & (df.StockCode != 'PADS'))
 	.groupBy(F.hour('InvoiceDate'))
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
@@ -309,7 +309,7 @@ def pergunta_7_tr(df):
 def pergunta_7(df):
 	
 	(df
-	.filter(df.valor_de_venda > 0)
+	.filter(df.valor_de_venda > 0 & (df.StockCode != 'PADS'))
 	.groupBy(F.month('InvoiceDate'))
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
