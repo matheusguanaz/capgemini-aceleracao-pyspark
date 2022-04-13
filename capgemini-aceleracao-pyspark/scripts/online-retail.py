@@ -43,7 +43,11 @@ def pergunta_2_qa(df):
 
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
-	print(df.groupBy('InvoiceDate_qa').count().show()) 
+	df = df.withColumn('Quantity_qa', 
+					F.when(F.col('Quantity').isNull(), 'M'))
+
+	df.groupBy('Quantity_qa').count().show()
+	df.groupBy('InvoiceDate_qa').count().show() 
 
 	return df
 
@@ -283,13 +287,13 @@ if __name__ == "__main__":
 		          .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/online-retail/online-retail.csv"))
 	#print(df.show())
 
-	df = pergunta_1_qa(df)
-	df = pergunta_1_tr(df)
-	pergunta_1(df)
+	#df = pergunta_1_qa(df)
+	#df = pergunta_1_tr(df)
+	#pergunta_1(df)
 
-	#df = pergunta_2_qa(df)
-	#df = pergunta_2_tr(df)
-	#pergunta_2(df)
+	df = pergunta_2_qa(df)
+	df = pergunta_2_tr(df)
+	pergunta_2(df)
 
 	#df = pergunta_3_qa(df)
 	#pergunta_3(df)
