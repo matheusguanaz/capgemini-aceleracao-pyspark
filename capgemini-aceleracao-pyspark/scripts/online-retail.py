@@ -247,15 +247,15 @@ def pergunta_6_tr(df):
 
 	return df
 
+
 def pergunta_6(df):
-	print(
-		df
-		.filter(df.valor_de_venda > 0)
-		.groupBy(F.hour('InvoiceDate'))
-		.sum('valor_de_venda')
-		.orderBy(F.col('sum(valor_de_venda)').desc())
-		.show()
-	)
+	
+	(df
+	.filter(df.valor_de_venda > 0)
+	.groupBy(F.hour('InvoiceDate'))
+	.sum('valor_de_venda')
+	.orderBy(F.col('sum(valor_de_venda)').desc())
+	.show())
 
 def pergunta_7_qa(df):
 
