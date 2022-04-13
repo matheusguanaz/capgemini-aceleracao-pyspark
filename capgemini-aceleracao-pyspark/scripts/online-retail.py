@@ -463,6 +463,19 @@ def pergunta_10_tr(df):
 
 	return df
 
+
+def pergunta_10(df):
+		
+	(df
+	.filter((F.col('valor_de_venda') > 0) &
+			(F.col('StockCode') != 'PADS') &
+			(F.col('StockCode') == 'M'))
+	.groupBy('Country')
+	.sum('valor_de_venda')
+	.orderBy(F.col('sum(valor_de_venda)').desc())
+	.show(1))
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -523,3 +536,4 @@ if __name__ == "__main__":
 
 	df = pergunta_10_qa(df)
 	df = pergunta_10_tr(df)
+	pergunta_10(df)
