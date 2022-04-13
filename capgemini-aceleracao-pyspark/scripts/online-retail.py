@@ -409,6 +409,20 @@ def pergunta_9_tr(df):
 	df.filter(F.col('UnitPrice').isNull()).show()
 	df.filter(F.col('Quantity').isNull()).show()
 
+	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
+
+	return df
+
+
+def pergunta_9(df):
+
+	(df
+	.filter((F.col('valor_de_venda') > 0) &
+			(F.col('StockCode') != 'PADS'))
+	.groupBy('Country')
+	.sum('valor_de_venda')
+	.orderBy(F.col('sum(valor_de_venda)').desc())
+	.show(1))
 
 
 if __name__ == "__main__":
@@ -467,3 +481,4 @@ if __name__ == "__main__":
 
 	df = pergunta_9_qa(df)
 	df = pergunta_9_tr(df)
+	pergunta_9(df)
