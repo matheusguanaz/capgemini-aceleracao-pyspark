@@ -363,6 +363,17 @@ def pergunta_8_tr(df):
 
 	return df
 
+
+def pergunta_8(df):
+
+	(df
+	.filter((F.col('valor_de_venda') > 0) &
+			(F.col('StockCode') != 'PADS'))
+	.groupBy(F.month('InvoiceDate'), F.col('StockCode'))
+	.sum('valor_de_venda')
+	.orderBy(F.col('sum(valor_de_venda)').desc())
+	.show(1))
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
