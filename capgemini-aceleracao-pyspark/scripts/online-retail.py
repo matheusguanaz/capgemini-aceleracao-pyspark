@@ -219,11 +219,13 @@ def pergunta_6_qa(df):
 
 	return df
 
+
 def pergunta_6_tr(df):
+
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
-	print(df.filter(df.InvoiceDate.isNull()).show())
+	df.filter(df.InvoiceDate.isNull()).show()
 
 	df = df.withColumn('UnitPrice', 
 					F.when(df['UnitPrice_qa'] == 'F', 
@@ -233,7 +235,14 @@ def pergunta_6_tr(df):
 	
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
 
-	print(df.filter(df.UnitPrice.isNull()).show())
+	df.filter(df.UnitPrice.isNull()).show()
+
+	df = df.withColumn('Quantity',
+						F.when(F.col('Quantity_qa') == 'M', 0)
+						.otherwise(F.col('Quantity')))
+
+	df.filter(df.Quantity.isNull()).show()
+
 	df = df.withColumn('valor_de_venda', F.col('UnitPrice') * F.col('Quantity'))
 
 	return df
