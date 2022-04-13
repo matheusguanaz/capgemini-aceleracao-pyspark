@@ -121,15 +121,15 @@ def pergunta_4_qa(df):
 
 	df.filter(df.Quantity.isNull()).show()
 	df = df.withColumn('Quantity_qa',
-						F.when(F.col('Quantity').isNull(), 'M'))
+					F.when(F.col('Quantity').isNull(), 'M'))
 
 	return df
 
 def pergunta_4_tr(df):
 
 	df = df.withColumn('Quantity',
-						F.when(F.col('Quantity_qa') == 'M', 0)
-						.otherwise(F.col('Quantity')))
+					F.when(F.col('Quantity_qa') == 'M', 0)
+					.otherwise(F.col('Quantity')))
 
 	df.filter(df.Quantity.isNull()).show()
 
@@ -152,7 +152,7 @@ def pergunta_5_qa(df):
 						F.when(check_is_empty('InvoiceDate'), 'M'))
 
 	df = df.withColumn('Quantity_qa',
-						F.when(F.col('Quantity').isNull(), 'M'))
+					F.when(F.col('Quantity').isNull(), 'M'))
 
 	df.groupBy('InvoiceDate_qa').count().show() 
 	df.groupBy('Quantity_qa').count().show() 
@@ -166,8 +166,8 @@ def pergunta_5_tr(df):
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
 	df = df.withColumn('Quantity',
-						F.when(F.col('Quantity_qa') == 'M', 0)
-						.otherwise(F.col('Quantity')))
+					F.when(F.col('Quantity_qa') == 'M', 0)
+					.otherwise(F.col('Quantity')))
 
 	df.filter(df.InvoiceDate.isNull()).show()
 	df.filter(df.Quantity.isNull()).show()
@@ -208,7 +208,7 @@ def pergunta_6_qa(df):
 	)
 
 	df = df.withColumn('Quantity_qa',
-						F.when(F.col('Quantity').isNull(), 'M'))
+					F.when(F.col('Quantity').isNull(), 'M'))
 
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
@@ -238,8 +238,8 @@ def pergunta_6_tr(df):
 	df.filter(df.UnitPrice.isNull()).show()
 
 	df = df.withColumn('Quantity',
-						F.when(F.col('Quantity_qa') == 'M', 0)
-						.otherwise(F.col('Quantity')))
+					F.when(F.col('Quantity_qa') == 'M', 0)
+					.otherwise(F.col('Quantity')))
 
 	df.filter(df.Quantity.isNull()).show()
 
@@ -267,7 +267,7 @@ def pergunta_7_qa(df):
 	)
 
 	df = df.withColumn('Quantity_qa',
-						F.when(F.col('Quantity').isNull(), 'M'))
+					F.when(F.col('Quantity').isNull(), 'M'))
 
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
@@ -293,8 +293,8 @@ def pergunta_7_tr(df):
 				)
 	
 	df = df.withColumn('Quantity',
-						F.when(F.col('Quantity_qa') == 'M', 0)
-						.otherwise(F.col('Quantity')))
+					F.when(F.col('Quantity_qa') == 'M', 0)
+					.otherwise(F.col('Quantity')))
 
 	df = df.withColumn('UnitPrice', F.col('UnitPrice').cast('double'))
 
@@ -314,7 +314,7 @@ def pergunta_7(df):
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
 	.show())
-	
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
