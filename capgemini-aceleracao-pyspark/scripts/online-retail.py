@@ -265,16 +265,15 @@ def pergunta_7_qa(df):
 					.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
 	)
 
-	df = df.withColumn('StockCode_qa', 
-					F.when(check_is_empty('StockCode'), 'M')
-					.when(F.length(df.StockCode) != 5, 'F'))
+	df = df.withColumn('Quantity_qa',
+						F.when(F.col('Quantity').isNull(), 'M'))
 
 	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
 
 
-	print(df.groupBy('UnitPrice_qa').count().show())
-	print(df.groupBy('StockCode_qa').count().show())	
-	print(df.groupBy('InvoiceDate_qa').count().show()) 
+	df.groupBy('UnitPrice_qa').count().show()
+	df.groupBy('Quantity_qa').count().show()	
+	df.groupBy('InvoiceDate_qa').count().show() 
 
 	return df
 
@@ -349,10 +348,10 @@ if __name__ == "__main__":
 	#df = pergunta_5_tr(df)
 	#pergunta_5(df)
 
-	df = pergunta_6_qa(df)
-	df = pergunta_6_tr(df)
-	pergunta_6(df)
+	#df = pergunta_6_qa(df)
+	#df = pergunta_6_tr(df)
+	#pergunta_6(df)
 
-	#df = pergunta_7_qa(df)
-	#df = pergunta_7_tr(df)
-	#pergunta_7(df)
+	df = pergunta_7_qa(df)
+	df = pergunta_7_tr(df)
+	pergunta_7(df)
