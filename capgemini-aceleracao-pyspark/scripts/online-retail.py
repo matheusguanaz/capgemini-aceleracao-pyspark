@@ -174,7 +174,9 @@ def pergunta_5_tr(df):
 
 	return df
 
+
 def pergunta_5(df):
+
 	df = (
 		df
 		.filter((~df.InvoiceNo.startswith('C')) & (df.Quantity > 0))
@@ -194,7 +196,7 @@ def pergunta_5(df):
 								F.col('b.sum_quantity') == F.col('max(sum_quantity)'),
 								"left").select('b.month','StockCode','sum_quantity')
 	
-	print(df_max_per_month.orderBy('month').show())
+	df_max_per_month.orderBy('month').show()
 
 
 def pergunta_6_qa(df):
