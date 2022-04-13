@@ -145,11 +145,17 @@ def pergunta_4(df):
 	.orderBy(F.col('sum(Quantity)').desc())
 	.show())
 
+
 def pergunta_5_qa(df):
 
-	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
+	df = df.withColumn('InvoiceDate_qa', 
+						F.when(check_is_empty('InvoiceDate'), 'M'))
 
-	print(df.groupBy('InvoiceDate_qa').count().show()) 
+	df = df.withColumn('Quantity_qa',
+						F.when(F.col('Quantity').isNull(), 'M'))
+
+	df.groupBy('InvoiceDate_qa').count().show() 
+	df.groupBy('Quantity_qa').count().show() 
 
 	return df
 	
@@ -319,13 +325,13 @@ if __name__ == "__main__":
 	#df = pergunta_3_tr(df)
 	#pergunta_3(df)
 
-	df = pergunta_4_qa(df)
+	#df = pergunta_4_qa(df)
 	#df = pergunta_4_tr(df)
 	#pergunta_4(df)
 
-	#df = pergunta_5_qa(df)
-	#df = pergunta_5_tr(df)
-	#pergunta_5(df)
+	df = pergunta_5_qa(df)
+	df = pergunta_5_tr(df)
+	pergunta_5(df)
 
 	#df = pergunta_6_qa(df)
 	#df = pergunta_6_tr(df)
