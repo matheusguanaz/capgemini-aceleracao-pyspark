@@ -32,7 +32,6 @@ def pergunta_1_tr(df):
 
 def pergunta_1(df):
 
-	
 	(df
 	.filter((F.col('StockCode').startswith('gift_0001')) & #Apenas gift cards
 			(~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas 
@@ -86,12 +85,6 @@ def pergunta_3_qa(df):
 	df = df.withColumn('Quantity_qa', 
 					F.when(F.col('Quantity').isNull(), 'M'))
 	
-	(df
-	.filter(F.col('StockCode').startswith('S') & ~F.col('InvoiceNo').startswith('C'))
-	.groupBy('StockCode')
-	.count()
-	.show())
-
 	df.filter(F.col('Quantity').isNull()).show()
 	df.groupBy('Quantity_qa').count().show()
 
