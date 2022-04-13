@@ -374,6 +374,27 @@ def pergunta_8(df):
 	.orderBy(F.col('sum(valor_de_venda)').desc())
 	.show(1))
 
+
+def pergunta_9_qa(df):
+
+	df = df.withColumn("UnitPrice_qa", 
+					F.when(check_is_empty('UnitPrice'), 'M')
+					.when(F.col('UnitPrice').contains(','), 'F')
+					.when(F.col('UnitPrice').rlike('[^0-9]'), 'A')
+	)
+
+	df = df.withColumn('Quantity_qa',
+					F.when(F.col('Quantity').isNull(), 'M'))
+
+	df = df.withColumn('InvoiceDate_qa', F.when(check_is_empty('InvoiceDate'), 'M'))
+
+	df.groupBy('UnitPrice_qa').count().show()
+	df.groupBy('Quantity_qa').count().show()	
+	df.groupBy('InvoiceDate_qa').count().show() 
+
+
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -424,6 +445,8 @@ if __name__ == "__main__":
 	#df = pergunta_7_tr(df)
 	#pergunta_7(df)
 
-	df = pergunta_8_qa(df)
-	df = pergunta_8_tr(df)
-	pergunta_8(df)
+	#df = pergunta_8_qa(df)
+	#df = pergunta_8_tr(df)
+	#pergunta_8(df)
+
+	df = pergunta_9_qa(df)
