@@ -34,9 +34,9 @@ def pergunta_1(df):
 
 	print(
 		df
-		.filter((F.col('StockCode').startswith('gift_0001')) & 
-				(~F.col('InvoiceNo').startswith('C')) &
-				(F.col('Quantity') > 0))
+		.filter((F.col('StockCode').startswith('gift_0001')) & #Apenas gift cards
+				(~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas 
+				(F.col('Quantity') > 0)) #Apenas vendas que valores que entraram em caixa
 		.agg({'Quantity' : 'sum'})
 		.show())
 
@@ -72,9 +72,9 @@ def pergunta_2_tr(df):
 def pergunta_2(df):
 	
 	(df
-	.filter((F.col('StockCode').startswith('gift_0001')) & 
-			(~F.col('InvoiceNo').startswith('C')) &
-			(F.col('Quantity') > 0))
+	.filter((F.col('StockCode').startswith('gift_0001')) & #Apenas gift cards
+			(~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas
+			(F.col('Quantity') > 0)) #Apenas vendas que valores que entraram em caixa
 	.groupBy(F.month('InvoiceDate'))
 	.sum('Quantity')
 	.orderBy('month(InvoiceDate)')
@@ -112,7 +112,9 @@ def pergunta_3_tr(df):
 def pergunta_3(df):
 
 	(df
-	.filter(F.col('StockCode').startswith('S') & ~F.col('InvoiceNo').startswith('C'))
+	.filter((F.col('StockCode') == 'S') & #Apenas amostras
+			(~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas
+			(F.col('Quantity') > 0)) #Apenas vendas que valores que entraram em caixa
 	.groupBy('StockCode').sum('Quantity')
 	.show())
 
@@ -139,7 +141,9 @@ def pergunta_4_tr(df):
 def pergunta_4(df):
 
 	(df
-	.filter((~F.col('InvoiceNo').startswith('C')) & (F.col('Quantity') > 0) & (F.col('StockCode') != 'PADS'))
+	.filter((~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas
+			(F.col('Quantity') > 0) & #Apenas vendas que valores que entraram em caixa
+			(F.col('StockCode') != 'PADS')) #Desconsiderar tipo PADS
 	.groupBy('StockCode')
 	.sum('Quantity')
 	.orderBy(F.col('sum(Quantity)').desc())
@@ -179,7 +183,9 @@ def pergunta_5(df):
 
 	df = (
 		df
-		.filter((~F.col('InvoiceNo').startswith('C')) & (F.col('Quantity') > 0) & (F.col('StockCode') != 'PADS'))
+		.filter((~F.col('InvoiceNo').startswith('C')) & # Desconsidera vendas canceladas
+				(F.col('Quantity') > 0) & #Apenas vendas que valores que entraram em caixa
+				(F.col('StockCode') != 'PADS')) #Desconsiderar tipo PADS
 		.groupBy('StockCode', F.month('InvoiceDate'))
 		.sum('Quantity')
 		.orderBy(F.col('sum(Quantity)').desc())
@@ -251,7 +257,8 @@ def pergunta_6_tr(df):
 def pergunta_6(df):
 	
 	(df
-	.filter(F.col('valor_de_venda') > 0 & (F.col('StockCode') != 'PADS'))
+	.filter(F.col('valor_de_venda') > 0 & #Apenas vendas que valores que entraram em caixa
+	 		(F.col('StockCode') != 'PADS')) #Desconsiderar tipo PADS
 	.groupBy(F.hour('InvoiceDate'))
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
@@ -309,7 +316,8 @@ def pergunta_7_tr(df):
 def pergunta_7(df):
 	
 	(df
-	.filter(F.col('valor_de_venda') > 0 & (F.col('StockCode') != 'PADS'))
+	.filter(F.col('valor_de_venda') > 0 &  #Apenas vendas que valores que entraram em caixa
+			(F.col('StockCode') != 'PADS')) #Desconsiderar tipo PADS
 	.groupBy(F.month('InvoiceDate'))
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
