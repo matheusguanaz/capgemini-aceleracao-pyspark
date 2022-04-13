@@ -58,6 +58,21 @@ def pergunta_2(df):
 	.show())
 	
 
+def pergunta_3_qa(df):
+	print(
+		df
+		.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
+		.groupBy('StockCode')
+		.count()
+		.show()
+		)
+
+	print(
+		df
+		.filter(df.Quantity.isNull())
+		.show()
+	)
+
 def pergunta_3(df):
 	print(df.filter(df.StockCode.startswith('S') & ~df.InvoiceNo.startswith('C'))
 	.groupBy('StockCode').sum('Quantity')
@@ -243,6 +258,7 @@ if __name__ == "__main__":
 	#df = pergunta_2_tr(df)
 	#pergunta_2(df)
 
+	#df = pergunta_3_qa(df)
 	#pergunta_3(df)
 
 	#pergunta_4(df)
@@ -255,6 +271,6 @@ if __name__ == "__main__":
 	#df = pergunta_6_tr(df)
 	#pergunta_6(df)
 
-	df = pergunta_7_qa(df)
-	df = pergunta_7_tr(df)
-	pergunta_7(df)
+	#df = pergunta_7_qa(df)
+	#df = pergunta_7_tr(df)
+	#pergunta_7(df)
