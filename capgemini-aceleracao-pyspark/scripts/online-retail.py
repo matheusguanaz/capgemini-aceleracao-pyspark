@@ -159,12 +159,18 @@ def pergunta_5_qa(df):
 
 	return df
 	
+	
 def pergunta_5_tr(df):
 
 	df = df.withColumn('InvoiceDate', 
 					F.to_timestamp(F.col('InvoiceDate'), 'd/M/yyyy H:m'))
 
-	print(df.filter(df.InvoiceDate.isNull()).show())
+	df = df.withColumn('Quantity',
+						F.when(F.col('Quantity_qa') == 'M', 0)
+						.otherwise(F.col('Quantity')))
+
+	df.filter(df.InvoiceDate.isNull()).show()
+	df.filter(df.Quantity.isNull()).show()
 
 	return df
 
