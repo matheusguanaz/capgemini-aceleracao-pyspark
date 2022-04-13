@@ -31,7 +31,7 @@ def pergunta_1_tr(df):
 
 
 def pergunta_1(df):
-	
+
 	print(
 		df
 		.filter((df.StockCode.startswith('gift_0001')) & 
@@ -68,13 +68,16 @@ def pergunta_2_tr(df):
 
 	return df
 
+
 def pergunta_2(df):
-	print(df
+	
+	(df
 	.filter((df.StockCode.startswith('gift_0001')) & 
 			(~df.InvoiceNo.startswith('C')) &
 			(df.Quantity > 0))
 	.groupBy(F.month('InvoiceDate'))
 	.sum('Quantity')
+	.orderBy('month(InvoiceDate)')
 	.show())
 	
 
