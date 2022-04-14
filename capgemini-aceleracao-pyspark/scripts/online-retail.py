@@ -528,6 +528,15 @@ def pergunta_11(df):
 	.show())
 
 
+def pergunta_12_qa(df):
+
+	df = df.withColumn('Quantity_qa',
+					F.when(F.col('Quantity').isNull(), 'M'))
+
+	df.groupBy('Quantity_qa').count().show()	
+
+	return df
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -590,6 +599,8 @@ if __name__ == "__main__":
 	#df = pergunta_10_tr(df)
 	#pergunta_10(df)
 
-	df = pergunta_11_qa(df)
-	df = pergunta_11_tr(df)
-	pergunta_11(df)
+	#df = pergunta_11_qa(df)
+	#df = pergunta_11_tr(df)
+	#pergunta_11(df)
+
+	df = pergunta_12_qa(df)
