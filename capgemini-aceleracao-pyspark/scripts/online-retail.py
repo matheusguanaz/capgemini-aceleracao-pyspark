@@ -548,6 +548,19 @@ def pergunta_12_tr(df):
 
 	return df
 
+
+def pergunta_12(df):
+
+	maior_n_de_itens = (df
+				.filter(F.col('StockCode') != 'PADS')
+				.agg({'Quantity' : 'max'})
+				.first()[0])
+
+	(df
+	.select('InvoiceNo','Quantity')
+	.filter(F.col('Quantity') == maior_n_de_itens)
+	.show())
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -616,3 +629,4 @@ if __name__ == "__main__":
 
 	df = pergunta_12_qa(df)
 	df = pergunta_12_tr(df)
+	pergunta_12(df)
