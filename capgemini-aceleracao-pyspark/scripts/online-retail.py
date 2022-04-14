@@ -515,6 +515,19 @@ def pergunta_11_tr(df):
 	return df
 
 
+def pergunta_11(df):
+
+	maior_valor_de_venda = (df
+				.filter(F.col('StockCode') != 'PADS')
+				.agg({'valor_de_venda' : 'max'})
+				.first()[0])
+
+	(df
+	.select('InvoiceNo','valor_de_venda')
+	.filter(F.col('valor_de_venda') == maior_valor_de_venda)
+	.show())
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -579,3 +592,4 @@ if __name__ == "__main__":
 
 	df = pergunta_11_qa(df)
 	df = pergunta_11_tr(df)
+	pergunta_11(df)
