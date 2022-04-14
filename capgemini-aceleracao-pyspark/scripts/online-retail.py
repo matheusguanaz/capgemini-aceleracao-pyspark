@@ -561,6 +561,37 @@ def pergunta_12(df):
 	.filter(F.col('Quantity') == maior_n_de_itens)
 	.show())
 
+
+def pergunta_13_qa(df):
+
+	df = df.withColumn('CustomerID_qa',
+				F.when(F.col('CustomerID').isNull(), 'M'))
+	
+	df.groupBy('CustomerID_qa').count().show()
+
+
+def pergunta_13(df):
+
+	mais_frequente = (df
+					.filter(
+						(F.col('StockCode') != 'PADS') &
+						(F.col('CustomerID').isNotNull())
+						)
+					.groupBy('CustomerID')
+					.count()
+					.orderBy(F.col('count').desc())
+					.first()[1])
+
+	(df
+	.filter(
+		(F.col('StockCode') != 'PADS') &
+		(F.col('CustomerID').isNotNull())
+		)
+	.groupBy('CustomerID')
+	.count()
+	.filter(F.col('count') == mais_frequente)
+	.show())
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -627,6 +658,9 @@ if __name__ == "__main__":
 	#df = pergunta_11_tr(df)
 	#pergunta_11(df)
 
-	df = pergunta_12_qa(df)
-	df = pergunta_12_tr(df)
-	pergunta_12(df)
+	#df = pergunta_12_qa(df)
+	#df = pergunta_12_tr(df)
+	#pergunta_12(df)
+
+	pergunta_13_qa(df)
+	pergunta_13(df)
