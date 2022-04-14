@@ -367,8 +367,8 @@ def pergunta_8_tr(df):
 def pergunta_8(df):
 
 	(df
-	.filter((F.col('valor_de_venda') > 0) &
-			(F.col('StockCode') != 'PADS'))
+	.filter((F.col('valor_de_venda') > 0) & #Considerar apenas entradas no caixa
+			(F.col('StockCode') != 'PADS')) #Desconsiderar PADS
 	.groupBy(F.month('InvoiceDate'), F.col('StockCode'))
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
@@ -417,8 +417,8 @@ def pergunta_9_tr(df):
 def pergunta_9(df):
 
 	(df
-	.filter((F.col('valor_de_venda') > 0) &
-			(F.col('StockCode') != 'PADS'))
+	.filter((F.col('valor_de_venda') > 0) & #Considerar apenas entradas no caixa
+			(F.col('StockCode') != 'PADS')) #Desconsiderar produto PADS
 	.groupBy('Country')
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
@@ -467,9 +467,9 @@ def pergunta_10_tr(df):
 def pergunta_10(df):
 		
 	(df
-	.filter((F.col('valor_de_venda') > 0) &
-			(F.col('StockCode') != 'PADS') &
-			(F.col('StockCode') == 'M'))
+	.filter((F.col('valor_de_venda') > 0) & #Considerar apenas entradas no caixa
+			(F.col('StockCode') != 'PADS') & #Desconsiderar tipo de produto PADS
+			(F.col('StockCode') == 'M')) #Considerando apenas vendas manuais
 	.groupBy('Country')
 	.sum('valor_de_venda')
 	.orderBy(F.col('sum(valor_de_venda)').desc())
@@ -518,7 +518,7 @@ def pergunta_11_tr(df):
 def pergunta_11(df):
 
 	maior_valor_de_venda = (df
-				.filter(F.col('StockCode') != 'PADS')
+				.filter(F.col('StockCode') != 'PADS') #desconsiderar tipo de produto PADS
 				.agg({'valor_de_venda' : 'max'})
 				.first()[0])
 
@@ -552,7 +552,7 @@ def pergunta_12_tr(df):
 def pergunta_12(df):
 
 	maior_n_de_itens = (df
-				.filter(F.col('StockCode') != 'PADS')
+				.filter(F.col('StockCode') != 'PADS') #Desconsiderar tipos de produto PADS
 				.agg({'Quantity' : 'max'})
 				.first()[0])
 
@@ -574,8 +574,8 @@ def pergunta_13(df):
 
 	mais_frequente = (df
 					.filter(
-						(F.col('StockCode') != 'PADS') &
-						(F.col('CustomerID').isNotNull())
+						(F.col('StockCode') != 'PADS') & # Desconsiderar tipo PADS
+						(F.col('CustomerID').isNotNull()) #Desconsiderar clientes não informados
 						)
 					.groupBy('CustomerID')
 					.count()
@@ -584,8 +584,8 @@ def pergunta_13(df):
 
 	(df
 	.filter(
-		(F.col('StockCode') != 'PADS') &
-		(F.col('CustomerID').isNotNull())
+		(F.col('StockCode') != 'PADS') & #Desconsiderar tipo PADS
+		(F.col('CustomerID').isNotNull()) #Desconsiderar clientes não informados
 		)
 	.groupBy('CustomerID')
 	.count()
