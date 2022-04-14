@@ -537,6 +537,17 @@ def pergunta_12_qa(df):
 
 	return df
 
+
+def pergunta_12_tr(df):
+
+	df = df.withColumn('Quantity',
+				F.when(F.col('Quantity_qa') == 'M', 0)
+				.otherwise(F.col('Quantity')))
+
+	df.filter(F.col('Quantity').isNull()).show()
+
+	return df
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Online Retail]"))
@@ -604,3 +615,4 @@ if __name__ == "__main__":
 	#pergunta_11(df)
 
 	df = pergunta_12_qa(df)
+	df = pergunta_12_tr(df)
