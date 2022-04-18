@@ -93,6 +93,18 @@ def pergunta_2(df):
 	.filter(F.col('crimes_violentos') == maior_n_crimes_violentos)
 	.show())
 
+def pergunta_3_qa(df):
+
+	df = df.withColumn('population_qa',
+				F.when(
+					(F.col('population').isNull()) | 
+					(F.col('population') == '?'),
+				'M')
+				.when(F.col('population').contains(','), 'F')
+				.when(F.col('population').rlike('[^0-9.]'), 'A'))
+
+	df.groupBy('population_qa').count().show()
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -110,6 +122,8 @@ if __name__ == "__main__":
 	#df = pergunta_1_tr(df)
 	#pergunta_1(df)
 
-	pergunta_2_qa(df)
-	df = pergunta_2_tr(df)
-	pergunta_2(df)
+	#pergunta_2_qa(df)
+	#df = pergunta_2_tr(df)
+	#pergunta_2(df)
+
+	pergunta_3_qa(df)
