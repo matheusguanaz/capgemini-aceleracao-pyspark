@@ -106,6 +106,15 @@ def pergunta_3_qa(df):
 	df.groupBy('population_qa').count().show()
 
 
+def pergunta_3_tr(df):
+
+	df = df.withColumn('population', F.col('population').cast('double'))
+
+	df.select('population').filter(F.col('population').isNull()).show()
+
+	return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -127,3 +136,4 @@ if __name__ == "__main__":
 	#pergunta_2(df)
 
 	pergunta_3_qa(df)
+	df = pergunta_3_tr(df)
