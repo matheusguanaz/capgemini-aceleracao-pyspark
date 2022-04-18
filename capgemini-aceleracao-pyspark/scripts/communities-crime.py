@@ -16,6 +16,13 @@ def pergunta_1_qa(df):
 				
 	df.groupBy('PolicOperBudg_qa').count().show()
 
+
+def pergunta_1_tr(df):
+
+	df = df.withColumn('PolicOperBudg', F.col('PolicOperBudg').cast('double'))
+
+	df.filter(F.col('PolicOperBudg').isNull()).groupBy('PolicOperBudg').count().orderBy(F.col('count').desc()).show()
+
 	return df
 
 
@@ -31,4 +38,5 @@ if __name__ == "__main__":
 		          .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/communities-crime/communities-crime.csv"))
 	print(df.printSchema())
 
-	df = pergunta_1_qa(df)
+	pergunta_1_qa(df)
+	df = pergunta_1_tr(df)
