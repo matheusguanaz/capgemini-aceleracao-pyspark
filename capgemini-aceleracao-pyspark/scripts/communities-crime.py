@@ -209,6 +209,20 @@ def pergunta_5_tr(df):
 	return df
 
 
+def pergunta_5(df):
+
+	#Considerando que todos que recebem salário são empregados
+	maior_percentual_recebe_salario = (df
+									.select('PctEmploy')
+									.agg({'PctEmploy':'max'})
+									.first()[0])
+
+	(df
+	.select('communityname','PctEmploy')
+	.filter(F.col('PctEmploy') == maior_percentual_recebe_salario)
+	.show())
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -239,3 +253,4 @@ if __name__ == "__main__":
 
 	pergunta_5_qa(df)
 	df = pergunta_5_tr(df)
+	pergunta_5(df)
