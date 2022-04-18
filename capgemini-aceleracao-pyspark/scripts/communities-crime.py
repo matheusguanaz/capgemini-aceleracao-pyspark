@@ -199,7 +199,16 @@ def pergunta_5_qa(df):
 
 	df.groupBy('PctEmploy_qa').count().show()
 	
-	
+
+def pergunta_5_tr(df):
+
+	df = df.withColumn('PctEmploy', F.col('PctEmploy').cast('double'))
+
+	df.select('PctEmploy').filter(F.col('PctEmploy').isNull()).show()
+
+	return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -229,3 +238,4 @@ if __name__ == "__main__":
 	#pergunta_4(df)
 
 	pergunta_5_qa(df)
+	df = pergunta_5_tr(df)
