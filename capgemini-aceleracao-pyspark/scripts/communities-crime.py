@@ -223,6 +223,28 @@ def pergunta_5(df):
 	.show())
 
 
+def pergunta_6_qa(df):
+
+	df = df.withColumn('population_qa',
+				F.when(
+					(F.col('population').isNull()) | 
+					(F.col('population') == '?'),
+				'M')
+				.when(F.col('population').contains(','), 'F')
+				.when(F.col('population').rlike('[^0-9.]'), 'A'))
+
+	df = df.withColumn('agePct16t24_qa',
+				F.when(
+					(F.col('agePct16t24').isNull()) | 
+					(F.col('agePct16t24') == '?'),
+				'M')
+				.when(F.col('agePct16t24').contains(','), 'F')
+				.when(F.col('agePct16t24').rlike('[^0-9.]'), 'A'))
+
+	df.groupBy('population_qa').count().show()
+	df.groupBy('agePct16t24_qa').count().show()						
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -251,6 +273,8 @@ if __name__ == "__main__":
 	#df = pergunta_4_tr(df)
 	#pergunta_4(df)
 
-	pergunta_5_qa(df)
-	df = pergunta_5_tr(df)
-	pergunta_5(df)
+	#pergunta_5_qa(df)
+	#df = pergunta_5_tr(df)
+	#pergunta_5(df)
+
+	pergunta_6_qa(df)
