@@ -73,8 +73,7 @@ def pergunta_2(df):
 
 	print("Maior Numero de crimes violentos per capita")
 	maior_n_crimes_violentos_per_capita = (df
-	.select('ViolentCrimesPerPop')
-	.orderBy(F.col('ViolentCrimesPerPop').desc())
+	.agg({'ViolentCrimesPerPop':'max'})
 	.first()[0])
 
 	(df
@@ -84,8 +83,7 @@ def pergunta_2(df):
 
 	print("Maior numero de crimes violentos")
 	maior_n_crimes_violentos = (df
-	.select('crimes_violentos')
-	.orderBy(F.col('crimes_violentos').desc())
+	.agg({'crimes_violentos':'max'})
 	.first()[0])
 
 	(df
@@ -118,8 +116,7 @@ def pergunta_3_tr(df):
 def pergunta_3(df):
 
 	maior_populacao = (df
-				.select('population')
-				.orderBy(F.col('population').desc())
+				.agg({'population':'max'}))
 				.first()[0])
 
 	(df
@@ -166,7 +163,6 @@ def pergunta_4(df):
 
 	print("Maior porcentagem de população negra")
 	maior_porcentagem_populacao_negra = (df
-										.select('racepctblack')
 										.agg({'racepctblack' : 'max'})
 										.first()[0])
 	
@@ -177,7 +173,6 @@ def pergunta_4(df):
 
 	print("Maior população negra")
 	maior_populacao_negra = (df
-							.select('populacao_negra')
 							.agg({'populacao_negra':'max'})
 							.first()[0])
 
@@ -213,7 +208,6 @@ def pergunta_5(df):
 
 	#Considerando que todos que recebem salário são empregados
 	maior_percentual_recebe_salario = (df
-									.select('PctEmploy')
 									.agg({'PctEmploy':'max'})
 									.first()[0])
 
@@ -262,7 +256,6 @@ def pergunta_6(df):
 	#Considerando que jovem é definido como uma pessoa entre 16 e 24 anos
 	print("Comunidade com maior percentual de jovens")
 	maior_percentual_jovens = (df
-							.select('agePct16t24')
 							.agg({'agePct16t24' : 'max'})
 							.first()[0])
 
@@ -273,7 +266,6 @@ def pergunta_6(df):
 
 	print("Comunidade com maior numero de jovens")
 	maior_n_jovens = (df
-						.select('numero_jovens')
 						.agg({'numero_jovens' : 'max'})
 						.first()[0])
 
