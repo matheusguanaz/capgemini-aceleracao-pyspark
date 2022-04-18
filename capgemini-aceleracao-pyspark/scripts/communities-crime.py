@@ -26,6 +26,15 @@ def pergunta_1_tr(df):
 	return df
 
 
+def pergunta_1(df):
+
+	maior_orcamento = (df
+					.agg({'PolicOperBudg' : 'max'})
+					.first()[0])
+
+	df.select('communityname','PolicOperBudg').filter(F.col('PolicOperBudg') == maior_orcamento).show()
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -40,3 +49,4 @@ if __name__ == "__main__":
 
 	pergunta_1_qa(df)
 	df = pergunta_1_tr(df)
+	pergunta_1(df)
