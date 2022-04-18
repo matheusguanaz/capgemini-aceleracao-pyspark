@@ -35,6 +35,28 @@ def pergunta_1(df):
 	df.select('communityname','PolicOperBudg').filter(F.col('PolicOperBudg') == maior_orcamento).show()
 
 
+def pergunta_2_qa(df):
+
+	df = df.withColumn('ViolentCrimesPerPop_qa',
+				F.when(
+					(F.col('ViolentCrimesPerPop').isNull()) | 
+					(F.col('ViolentCrimesPerPop') == '?'),
+				'M')
+				.when(F.col('ViolentCrimesPerPop').contains(','), 'F')
+				.when(F.col('ViolentCrimesPerPop').rlike('[^0-9.]'), 'A'))
+
+	df = df.withColumn('population_qa',
+				F.when(
+					(F.col('population').isNull()) | 
+					(F.col('population') == '?'),
+				'M')
+				.when(F.col('population').contains(','), 'F')
+				.when(F.col('population').rlike('[^0-9.]'), 'A'))
+
+	df.groupBy('ViolentCrimesPerPop_qa').count().show()
+	df.groupBy('population_qa').count().show()
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -45,8 +67,10 @@ if __name__ == "__main__":
 		          #.schema(schema_communities_crime)
 				  .options(header=True, inferSChema=False)
 		          .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/communities-crime/communities-crime.csv"))
-	print(df.printSchema())
+	#df.printSchema()
 
-	pergunta_1_qa(df)
-	df = pergunta_1_tr(df)
-	pergunta_1(df)
+	#pergunta_1_qa(df)
+	#df = pergunta_1_tr(df)
+	#pergunta_1(df)
+
+	pergunta_2_qa(df)
