@@ -11,5 +11,6 @@ if __name__ == "__main__":
 		          .format("csv")
 		          .option("header", "true")
 		          #.schema(schema_communities_crime)
-		          .load("/home/spark/capgemini-aceleracao-pyspark/data/online-retail/communities-crime.csv"))
-	print(df.show())
+				  .options(header=True, inferSChema=False)
+		          .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/communities-crime/communities-crime.csv"))
+	print(df.printSchema())
