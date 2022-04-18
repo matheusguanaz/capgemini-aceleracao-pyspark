@@ -127,6 +127,27 @@ def pergunta_3(df):
 	.filter(F.col('population') == maior_populacao)
 	.show())
 
+def pergunta_4_qa(df):
+
+	df = df.withColumn('population_qa',
+				F.when(
+					(F.col('population').isNull()) | 
+					(F.col('population') == '?'),
+				'M')
+				.when(F.col('population').contains(','), 'F')
+				.when(F.col('population').rlike('[^0-9.]'), 'A'))
+
+	df = df.withColumn('racepctblack_qa',
+				F.when(
+					(F.col('racepctblack').isNull()) | 
+					(F.col('racepctblack') == '?'),
+				'M')
+				.when(F.col('racepctblack').contains(','), 'F')
+				.when(F.col('racepctblack').rlike('[^0-9.]'), 'A'))
+
+	df.groupBy('population_qa').count().show()
+	df.groupBy('racepctblack_qa').count().show()
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -148,6 +169,8 @@ if __name__ == "__main__":
 	#df = pergunta_2_tr(df)
 	#pergunta_2(df)
 
-	pergunta_3_qa(df)
-	df = pergunta_3_tr(df)
-	pergunta_3(df)
+	#pergunta_3_qa(df)
+	#df = pergunta_3_tr(df)
+	#pergunta_3(df)
+
+	pergunta_4_qa(df)
