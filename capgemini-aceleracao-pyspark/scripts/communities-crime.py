@@ -161,6 +161,32 @@ def pergunta_4_tr(df):
 	
 	return df
 
+
+def pergunta_4(df):
+
+	print("Maior porcentagem de população negra")
+	maior_porcentagem_populacao_negra = (df
+										.select('racepctblack')
+										.agg({'racepctblack' : 'max'})
+										.first()[0])
+	
+	(df
+	.select('communityname','racepctblack')
+	.filter(F.col('racepctblack') == maior_porcentagem_populacao_negra)
+	.show())
+
+	print("Maior população negra")
+	maior_populacao_negra = (df
+							.select('populacao_negra')
+							.agg({'populacao_negra':'max'})
+							.first()[0])
+
+	(df
+	.select('communityname','populacao_negra')
+	.filter(F.col('populacao_negra') == maior_populacao_negra)
+	.show())
+	
+	
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -187,3 +213,4 @@ if __name__ == "__main__":
 
 	pergunta_4_qa(df)
 	df = pergunta_4_tr(df)
+	pergunta_4(df)
