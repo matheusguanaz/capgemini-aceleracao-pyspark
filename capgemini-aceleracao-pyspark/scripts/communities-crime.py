@@ -149,6 +149,18 @@ def pergunta_4_qa(df):
 	df.groupBy('racepctblack_qa').count().show()
 
 
+def pergunta_4_tr(df):
+
+	df = df.withColumn('population', F.col('population').cast('double'))
+	df = df.withColumn('racepctblack', F.col('racepctblack').cast('double'))
+
+	df = df.withColumn('populacao_negra', F.col('racepctblack') * F.col('population'))
+
+	df.select('population').filter(F.col('population').isNull()).show()
+	df.select('racepctblack').filter(F.col('racepctblack').isNull()).show()
+	
+	return df
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -174,3 +186,4 @@ if __name__ == "__main__":
 	#pergunta_3(df)
 
 	pergunta_4_qa(df)
+	df = pergunta_4_tr(df)
