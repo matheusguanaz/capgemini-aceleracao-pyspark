@@ -186,6 +186,19 @@ def pergunta_4(df):
 	.filter(F.col('populacao_negra') == maior_populacao_negra)
 	.show())
 	
+
+def pergunta_5_qa(df):
+
+	df = df.withColumn('PctEmploy_qa',
+				F.when(
+					(F.col('PctEmploy').isNull()) | 
+					(F.col('PctEmploy') == '?'),
+				'M')
+				.when(F.col('PctEmploy').contains(','), 'F')
+				.when(F.col('PctEmploy').rlike('[^0-9.]'), 'A'))
+
+	df.groupBy('PctEmploy_qa').count().show()
+	
 	
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -211,6 +224,8 @@ if __name__ == "__main__":
 	#df = pergunta_3_tr(df)
 	#pergunta_3(df)
 
-	pergunta_4_qa(df)
-	df = pergunta_4_tr(df)
-	pergunta_4(df)
+	#pergunta_4_qa(df)
+	#df = pergunta_4_tr(df)
+	#pergunta_4(df)
+
+	pergunta_5_qa(df)
