@@ -115,6 +115,19 @@ def pergunta_3_tr(df):
 	return df
 
 
+def pergunta_3(df):
+
+	maior_populacao = (df
+				.select('population')
+				.orderBy(F.col('population').desc())
+				.first()[0])
+
+	(df
+	.select('communityname','population')
+	.filter(F.col('population') == maior_populacao)
+	.show())
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -137,3 +150,4 @@ if __name__ == "__main__":
 
 	pergunta_3_qa(df)
 	df = pergunta_3_tr(df)
+	pergunta_3(df)
