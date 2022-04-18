@@ -250,10 +250,37 @@ def pergunta_6_tr(df):
 	df = df.withColumn('population', F.col('population').cast('double'))
 	df = df.withColumn('agePct16t24', F.col('agePct16t24').cast('double'))
 
+	df = df.withColumn('numero_jovens', F.col('agePct16t24') * F.col('population'))
+
 	df.select('population').filter(F.col('population').isNull()).show()
 	df.select('agePct16t24').filter(F.col('agePct16t24').isNull()).show()
 	
 	return df
+
+
+def pergunta_6(df):
+	#Considerando que jovem é definido como uma pessoa entre 16 e 24 anos
+	print("Comunidade com maior percentual de jovens")
+	maior_percentual_jovens = (df
+							.select('agePct16t24')
+							.agg({'agePct16t24' : 'max'})
+							.first()[0])
+
+	(df
+	.select('communityname','agePct16t24')
+	.filter(F.col('agePct16t24') == maior_percentual_jovens)
+	.show())
+
+	print("Comunidade com maior numero de jovens")
+	maior_n_jovens = (df
+						.select('numero_jovens')
+						.agg({'numero_jovens' : 'max'})
+						.first()[0])
+
+	(df
+	.select('communityname','numero_jovens')
+	.filter(F.col('numero_jovens') == maior_n_jovens)
+	.show())
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -289,3 +316,4 @@ if __name__ == "__main__":
 
 	pergunta_6_qa(df)
 	df = pergunta_6_tr(df)
+	pergunta_6(df)
