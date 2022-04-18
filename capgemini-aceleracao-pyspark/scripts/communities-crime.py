@@ -61,13 +61,39 @@ def pergunta_2_tr(df):
 
 	df = df.withColumn('population', F.col('population').cast('double'))
 	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
+	df = df.withColumn('crimes_violentos', F.col('ViolentCrimesPerPop') * F.col('population'))
 
 	df.select('population').filter(F.col('population').isNull()).show()
 	df.select('ViolentCrimesPerPop').filter(F.col('ViolentCrimesPerPop').isNull()).show()
 
 	return df
 
-	
+
+def pergunta_2(df):
+
+	print("Maior Numero de crimes violentos per capita")
+	maior_n_crimes_violentos_per_capita = (df
+	.select('ViolentCrimesPerPop')
+	.orderBy(F.col('ViolentCrimesPerPop').desc())
+	.first()[0])
+
+	(df
+	.select('communityname','ViolentCrimesPerPop')
+	.filter(F.col('ViolentCrimesPerPop') == maior_n_crimes_violentos_per_capita)
+	.show())
+
+	print("Maior numero de crimes violentos")
+	maior_n_crimes_violentos = (df
+	.select('crimes_violentos')
+	.orderBy(F.col('crimes_violentos').desc())
+	.first()[0])
+
+	(df
+	.select('communityname','crimes_violentos')
+	.filter(F.col('crimes_violentos') == maior_n_crimes_violentos)
+	.show())
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -86,3 +112,4 @@ if __name__ == "__main__":
 
 	pergunta_2_qa(df)
 	df = pergunta_2_tr(df)
+	pergunta_2(df)
