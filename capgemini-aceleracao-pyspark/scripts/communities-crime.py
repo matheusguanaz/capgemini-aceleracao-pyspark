@@ -57,6 +57,17 @@ def pergunta_2_qa(df):
 	df.groupBy('population_qa').count().show()
 
 
+def pergunta_2_tr(df):
+
+	df = df.withColumn('population', F.col('population').cast('double'))
+	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
+
+	df.select('population').filter(F.col('population').isNull()).show()
+	df.select('ViolentCrimesPerPop').filter(F.col('ViolentCrimesPerPop').isNull()).show()
+
+	return df
+
+	
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -74,3 +85,4 @@ if __name__ == "__main__":
 	#pergunta_1(df)
 
 	pergunta_2_qa(df)
+	df = pergunta_2_tr(df)
