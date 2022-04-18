@@ -245,6 +245,16 @@ def pergunta_6_qa(df):
 	df.groupBy('agePct16t24_qa').count().show()						
 
 
+def pergunta_6_tr(df):
+
+	df = df.withColumn('population', F.col('population').cast('double'))
+	df = df.withColumn('agePct16t24', F.col('agePct16t24').cast('double'))
+
+	df.select('population').filter(F.col('population').isNull()).show()
+	df.select('agePct16t24').filter(F.col('agePct16t24').isNull()).show()
+	
+	return df
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -278,3 +288,4 @@ if __name__ == "__main__":
 	#pergunta_5(df)
 
 	pergunta_6_qa(df)
+	df = pergunta_6_tr(df)
