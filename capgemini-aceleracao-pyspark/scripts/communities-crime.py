@@ -314,8 +314,29 @@ def pergunta_7(df):
 	df = (df
 		.select('PolicOperBudg','ViolentCrimesPerPop')
 		.filter(F.col('PolicOperBudg').isNotNull()))
-		
+
 	print(df.stat.corr('PolicOperBudg','ViolentCrimesPerPop'))
+
+def pergunta_8_qa(df):
+
+	df = (df.withColumn('PolicOperBudg_qa',
+	 			F.when(
+					(F.col('PolicOperBudg').isNull()) | 
+					(F.col('PolicOperBudg') == '?'),
+				'M')
+				.when(F.col('PolicOperBudg').contains(','), 'F')
+				.when(F.col('PolicOperBudg').rlike('[^0-9.]'), 'A')))
+
+	df = df.withColumn('PctPolicWhite_qa',
+				F.when(
+					(F.col('PctPolicWhite').isNull()) | 
+					(F.col('PctPolicWhite') == '?'),
+				'M')
+				.when(F.col('PctPolicWhite').contains(','), 'F')
+				.when(F.col('PctPolicWhite').rlike('[^0-9.]'), 'A'))
+				
+	df.groupBy('PolicOperBudg_qa').count().show()
+	df.groupBy('PctPolicWhite_qa').count().show()
 
 
 if __name__ == "__main__":
@@ -354,6 +375,10 @@ if __name__ == "__main__":
 	#df = pergunta_6_tr(df)
 	#pergunta_6(df)
 
-	pergunta_7_qa(df)
-	df = pergunta_7_tr(df)
-	pergunta_7(df)
+	#pergunta_7_qa(df)
+	#df = pergunta_7_tr(df)
+	#pergunta_7(df)
+
+	pergunta_8_qa(df)
+	#df = pergunta_8_tr(df)
+	#pergunta_8(df)
