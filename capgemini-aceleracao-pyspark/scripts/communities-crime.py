@@ -449,6 +449,28 @@ def pergunta_10(df):
 	print(df.stat.corr('population','ViolentCrimesPerPop'))
 
 
+def pergunta_11_qa(df):
+
+	df = (df.withColumn('ViolentCrimesPerPop_qa',
+	 			F.when(
+					(F.col('ViolentCrimesPerPop').isNull()) | 
+					(F.col('ViolentCrimesPerPop') == '?'),
+				'M')
+				.when(F.col('ViolentCrimesPerPop').contains(','), 'F')
+				.when(F.col('ViolentCrimesPerPop').rlike('[^0-9.]'), 'A')))
+
+	df = df.withColumn('medFamInc_qa',
+				F.when(
+					(F.col('medFamInc').isNull()) | 
+					(F.col('medFamInc') == '?'),
+				'M')
+				.when(F.col('medFamInc').contains(','), 'F')
+				.when(F.col('medFamInc').rlike('[^0-9.]'), 'A'))
+				
+	df.groupBy('ViolentCrimesPerPop_qa').count().show()
+	df.groupBy('medFamInc_qa').count().show()
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -497,6 +519,8 @@ if __name__ == "__main__":
 	#df = pergunta_9_tr(df)
 	#pergunta_9(df)
 
-	pergunta_10_qa(df)
-	df = pergunta_10_tr(df)
-	pergunta_10(df)
+	#pergunta_10_qa(df)
+	#df = pergunta_10_tr(df)
+	#pergunta_10(df)
+
+	pergunta_11_qa(df)
