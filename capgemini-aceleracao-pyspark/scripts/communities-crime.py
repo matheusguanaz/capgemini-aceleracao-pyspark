@@ -339,6 +339,18 @@ def pergunta_8_qa(df):
 	df.groupBy('PctPolicWhite_qa').count().show()
 
 
+def pergunta_8_tr(df):
+
+	df = df.withColumn('PolicOperBudg', F.col('PolicOperBudg').cast('double'))
+	df = df.withColumn('PctPolicWhite', F.col('PctPolicWhite').cast('double'))
+
+
+	df.filter(F.col('PolicOperBudg').isNull()).groupBy('PolicOperBudg').count().orderBy(F.col('count').desc()).show()
+	df.filter(F.col('PctPolicWhite').isNull()).groupBy('PctPolicWhite').count().orderBy(F.col('count').desc()).show()
+
+	return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -380,5 +392,5 @@ if __name__ == "__main__":
 	#pergunta_7(df)
 
 	pergunta_8_qa(df)
-	#df = pergunta_8_tr(df)
+	df = pergunta_8_tr(df)
 	#pergunta_8(df)
