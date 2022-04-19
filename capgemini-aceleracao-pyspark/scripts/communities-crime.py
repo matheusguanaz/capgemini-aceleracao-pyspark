@@ -482,6 +482,24 @@ def pergunta_11_tr(df):
 
 	return df
 
+def pergunta_11_tr(df):
+
+	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
+	df = df.withColumn('medFamInc', F.col('medFamInc').cast('double'))
+
+
+	df.filter(F.col('ViolentCrimesPerPop').isNull()).groupBy('ViolentCrimesPerPop').count().orderBy(F.col('count').desc()).show()
+	df.filter(F.col('medFamInc').isNull()).groupBy('medFamInc').count().orderBy(F.col('count').desc()).show()
+
+	return df
+
+
+def pergunta_11(df):
+
+	df = (df.select('medFamInc','ViolentCrimesPerPop'))
+		
+	print(df.stat.corr('medFamInc','ViolentCrimesPerPop'))
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -537,3 +555,4 @@ if __name__ == "__main__":
 
 	pergunta_11_qa(df)
 	df = pergunta_11_tr(df)
+	pergunta_11(df)
