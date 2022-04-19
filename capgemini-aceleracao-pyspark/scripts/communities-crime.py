@@ -302,7 +302,6 @@ def pergunta_7_tr(df):
 	df = df.withColumn('PolicOperBudg', F.col('PolicOperBudg').cast('double'))
 	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
 
-
 	df.filter(F.col('PolicOperBudg').isNull()).groupBy('PolicOperBudg').count().orderBy(F.col('count').desc()).show()
 	df.filter(F.col('ViolentCrimesPerPop').isNull()).groupBy('ViolentCrimesPerPop').count().orderBy(F.col('count').desc()).show()
 
@@ -343,7 +342,6 @@ def pergunta_8_tr(df):
 
 	df = df.withColumn('PolicOperBudg', F.col('PolicOperBudg').cast('double'))
 	df = df.withColumn('PctPolicWhite', F.col('PctPolicWhite').cast('double'))
-
 
 	df.filter(F.col('PolicOperBudg').isNull()).groupBy('PolicOperBudg').count().orderBy(F.col('count').desc()).show()
 	df.filter(F.col('PctPolicWhite').isNull()).groupBy('PctPolicWhite').count().orderBy(F.col('count').desc()).show()
@@ -391,7 +389,6 @@ def pergunta_9_tr(df):
 	df = df.withColumn('PolicOperBudg', F.col('PolicOperBudg').cast('double'))
 	df = df.withColumn('population', F.col('population').cast('double'))
 
-
 	df.filter(F.col('PolicOperBudg').isNull()).groupBy('PolicOperBudg').count().orderBy(F.col('count').desc()).show()
 	df.filter(F.col('population').isNull()).groupBy('population').count().orderBy(F.col('count').desc()).show()
 
@@ -402,8 +399,7 @@ def pergunta_9(df):
 
 	df = (df
 		.select('population','PolicOperBudg')
-		.filter(F.col('PolicOperBudg').isNotNull())
-		)
+		.filter(F.col('PolicOperBudg').isNotNull()))
 		
 	print(df.stat.corr('population','PolicOperBudg'))
 
@@ -434,7 +430,6 @@ def pergunta_10_tr(df):
 
 	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
 	df = df.withColumn('population', F.col('population').cast('double'))
-
 
 	df.filter(F.col('ViolentCrimesPerPop').isNull()).groupBy('ViolentCrimesPerPop').count().orderBy(F.col('count').desc()).show()
 	df.filter(F.col('population').isNull()).groupBy('population').count().orderBy(F.col('count').desc()).show()
@@ -475,7 +470,6 @@ def pergunta_11_tr(df):
 
 	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
 	df = df.withColumn('medFamInc', F.col('medFamInc').cast('double'))
-
 
 	df.filter(F.col('ViolentCrimesPerPop').isNull()).groupBy('ViolentCrimesPerPop').count().orderBy(F.col('count').desc()).show()
 	df.filter(F.col('medFamInc').isNull()).groupBy('medFamInc').count().orderBy(F.col('count').desc()).show()
