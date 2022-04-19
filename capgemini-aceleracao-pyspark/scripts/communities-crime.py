@@ -351,6 +351,19 @@ def pergunta_8_tr(df):
 	return df
 
 
+def pergunta_8(df):
+
+	df = (df
+		.select('PctPolicWhite','PolicOperBudg')
+		.filter(
+			F.col('PolicOperBudg').isNotNull() & 
+			F.col('PctPolicWhite').isNotNull()
+			)
+		)
+		
+	print(df.stat.corr('PctPolicWhite','PolicOperBudg'))
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -393,4 +406,4 @@ if __name__ == "__main__":
 
 	pergunta_8_qa(df)
 	df = pergunta_8_tr(df)
-	#pergunta_8(df)
+	pergunta_8(df)
