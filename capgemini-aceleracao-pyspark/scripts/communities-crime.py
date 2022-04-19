@@ -398,18 +398,6 @@ def pergunta_9_tr(df):
 	return df
 
 
-def pergunta_9_tr(df):
-
-	df = df.withColumn('PolicOperBudg', F.col('PolicOperBudg').cast('double'))
-	df = df.withColumn('population', F.col('population').cast('double'))
-
-
-	df.filter(F.col('PolicOperBudg').isNull()).groupBy('PolicOperBudg').count().orderBy(F.col('count').desc()).show()
-	df.filter(F.col('population').isNull()).groupBy('population').count().orderBy(F.col('count').desc()).show()
-
-	return df
-
-
 def pergunta_9(df):
 
 	df = (df
@@ -418,6 +406,28 @@ def pergunta_9(df):
 		)
 		
 	print(df.stat.corr('population','PolicOperBudg'))
+
+
+def pergunta_10_qa(df):
+
+	df = (df.withColumn('ViolentCrimesPerPop_qa',
+	 			F.when(
+					(F.col('ViolentCrimesPerPop').isNull()) | 
+					(F.col('ViolentCrimesPerPop') == '?'),
+				'M')
+				.when(F.col('ViolentCrimesPerPop').contains(','), 'F')
+				.when(F.col('ViolentCrimesPerPop').rlike('[^0-9.]'), 'A')))
+
+	df = df.withColumn('population_qa',
+				F.when(
+					(F.col('population').isNull()) | 
+					(F.col('population') == '?'),
+				'M')
+				.when(F.col('population').contains(','), 'F')
+				.when(F.col('population').rlike('[^0-9.]'), 'A'))
+				
+	df.groupBy('ViolentCrimesPerPop_qa').count().show()
+	df.groupBy('population_qa').count().show()
 
 
 if __name__ == "__main__":
@@ -464,6 +474,8 @@ if __name__ == "__main__":
 	#df = pergunta_8_tr(df)
 	#pergunta_8(df)
 
-	pergunta_9_qa(df)
-	df = pergunta_9_tr(df)
-	pergunta_9(df)
+	#pergunta_9_qa(df)
+	#df = pergunta_9_tr(df)
+	#pergunta_9(df)
+
+	pergunta_10_qa(df)
