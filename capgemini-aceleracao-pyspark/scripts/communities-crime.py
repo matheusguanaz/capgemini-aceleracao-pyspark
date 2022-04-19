@@ -161,25 +161,25 @@ def pergunta_4_tr(df):
 
 def pergunta_4(df):
 
-	print("Maior porcentagem de população negra")
+    print("Maior porcentagem de população negra")
 	maior_porcentagem_populacao_negra = (df
                             .agg({'racepctblack' : 'max'})
                             .first()[0])
 	
-	(df
-	.select('communityname','racepctblack')
-	.filter(F.col('racepctblack') == maior_porcentagem_populacao_negra)
-	.show())
+    (df
+    .select('communityname','racepctblack')
+    .filter(F.col('racepctblack') == maior_porcentagem_populacao_negra)
+    .show())
 
-	print("Maior população negra")
+    print("Maior população negra")
     maior_populacao_negra = (df
                              .agg({'populacao_negra':'max'})
                              .first()[0])
 
-	(df
-	.select('communityname','populacao_negra')
-	.filter(F.col('populacao_negra') == maior_populacao_negra)
-	.show())
+    (df
+    .select('communityname','populacao_negra')
+    .filter(F.col('populacao_negra') == maior_populacao_negra)
+    .show())
 	
 
 def pergunta_5_qa(df):
@@ -206,15 +206,15 @@ def pergunta_5_tr(df):
 
 def pergunta_5(df):
 
-	#Considerando que todos que recebem salário são empregados
+    #Considerando que todos que recebem salário são empregados
     maior_percentual_recebe_salario =  (df
                                         .agg({'PctEmploy':'max'})
                                         .first()[0])
 
-	(df
-	.select('communityname','PctEmploy')
-	.filter(F.col('PctEmploy') == maior_percentual_recebe_salario)
-	.show())
+    (df
+    .select('communityname','PctEmploy')
+    .filter(F.col('PctEmploy') == maior_percentual_recebe_salario)
+    .show())
 
 
 def pergunta_6_qa(df):
@@ -254,25 +254,25 @@ def pergunta_6_tr(df):
 
 def pergunta_6(df):
 	#Considerando que jovem é definido como uma pessoa entre 16 e 24 anos
-	print("Comunidade com maior percentual de jovens")
+    print("Comunidade com maior percentual de jovens")
     maior_percentual_jovens =   (df
                                 .agg({'agePct16t24' : 'max'})
                                 .first()[0])
 
-	(df
-	.select('communityname','agePct16t24')
-	.filter(F.col('agePct16t24') == maior_percentual_jovens)
-	.show())
+    (df
+    .select('communityname','agePct16t24')
+    .filter(F.col('agePct16t24') == maior_percentual_jovens)
+    .show())
 
-	print("Comunidade com maior numero de jovens")
+    print("Comunidade com maior numero de jovens")
     maior_n_jovens = (df
                     .agg({'numero_jovens' : 'max'})
                     .first()[0])
 
-	(df
-	.select('communityname','numero_jovens')
-	.filter(F.col('numero_jovens') == maior_n_jovens)
-	.show())
+    (df
+    .select('communityname','numero_jovens')
+    .filter(F.col('numero_jovens') == maior_n_jovens)
+    .show())
 
 
 def pergunta_7_qa(df):
@@ -312,7 +312,7 @@ def pergunta_7(df):
 
     df = (df
         .select('PolicOperBudg','ViolentCrimesPerPop')
-		.filter(F.col('PolicOperBudg').isNotNull()))
+        .filter(F.col('PolicOperBudg').isNotNull()))
 
 	print(df.stat.corr('PolicOperBudg','ViolentCrimesPerPop'))
 
@@ -557,7 +557,7 @@ def pergunta_12(df):
         .orderBy(F.col('ViolentCrimesPerPop').desc())
         .limit(10))
 
-	df_somas = df.select([F.sum(F.col(coluna)) for coluna in df.columns])
+    df_somas = df.select([F.sum(F.col(coluna)) for coluna in df.columns])
 	
     maior_valor = (df_somas
                 .select(F.greatest(*tuple(df_somas.columns)))
@@ -566,7 +566,7 @@ def pergunta_12(df):
     columns = ([column for column in df_somas.columns 
                         if (df_somas.select(column).first()[0]) == maior_valor])
 
-	df_somas.select(columns).show()
+    df_somas.select(columns).show()
 
 
 if __name__ == "__main__":
