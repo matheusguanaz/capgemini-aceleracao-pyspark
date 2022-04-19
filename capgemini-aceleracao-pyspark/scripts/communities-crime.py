@@ -398,6 +398,28 @@ def pergunta_9_tr(df):
 	return df
 
 
+def pergunta_9_tr(df):
+
+	df = df.withColumn('PolicOperBudg', F.col('PolicOperBudg').cast('double'))
+	df = df.withColumn('population', F.col('population').cast('double'))
+
+
+	df.filter(F.col('PolicOperBudg').isNull()).groupBy('PolicOperBudg').count().orderBy(F.col('count').desc()).show()
+	df.filter(F.col('population').isNull()).groupBy('population').count().orderBy(F.col('count').desc()).show()
+
+	return df
+
+
+def pergunta_9(df):
+
+	df = (df
+		.select('population','PolicOperBudg')
+		.filter(F.col('PolicOperBudg').isNotNull())
+		)
+		
+	print(df.stat.corr('population','PolicOperBudg'))
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -444,3 +466,4 @@ if __name__ == "__main__":
 
 	pergunta_9_qa(df)
 	df = pergunta_9_tr(df)
+	pergunta_9(df)
