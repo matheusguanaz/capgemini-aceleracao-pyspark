@@ -566,7 +566,7 @@ def pergunta_12(df):
 	df_somas = df.select([F.sum(F.col(coluna)) for coluna in df.columns])
 	
 	maior_valor = (df_somas
-					.select(F.greatest(*tuple(df_somas.columns)).alias('maior_valor'))
+					.select(F.greatest(*tuple(df_somas.columns)))
 					.first()[0])
 
 	columns = ([column for column in df_somas.columns 
