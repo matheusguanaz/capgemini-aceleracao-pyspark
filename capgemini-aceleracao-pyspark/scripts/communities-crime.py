@@ -538,6 +538,23 @@ def pergunta_12_qa(df):
 	df.groupBy('racePctAsian_qa').count().show()
 	df.groupBy('racePctHisp_qa').count().show()
 
+
+def pergunta_12_tr(df):
+
+	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
+	df = df.withColumn('racepctblack', F.col('racepctblack').cast('double'))
+	df = df.withColumn('racePctWhite', F.col('racePctWhite').cast('double'))
+	df = df.withColumn('racePctAsian', F.col('racePctAsian').cast('double'))
+	df = df.withColumn('racePctHisp', F.col('racePctHisp').cast('double'))
+
+	df.filter(F.col('ViolentCrimesPerPop').isNull()).groupBy('ViolentCrimesPerPop').count().show()
+	df.filter(F.col('racepctblack').isNull()).groupBy('racepctblack').count().show()
+	df.filter(F.col('racePctWhite').isNull()).groupBy('racePctWhite').count().show()
+	df.filter(F.col('racePctAsian').isNull()).groupBy('racePctAsian').count().show()
+	df.filter(F.col('racePctHisp').isNull()).groupBy('racePctHisp').count().show()
+
+	return df
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -595,3 +612,4 @@ if __name__ == "__main__":
 	#pergunta_11(df)
 
 	pergunta_12_qa(df)
+	df = pergunta_12_tr(df)
