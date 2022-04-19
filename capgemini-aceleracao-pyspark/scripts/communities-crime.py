@@ -442,6 +442,13 @@ def pergunta_10_tr(df):
 	return df
 
 
+def pergunta_10(df):
+
+	df = (df.select('population','ViolentCrimesPerPop'))
+		
+	print(df.stat.corr('population','ViolentCrimesPerPop'))
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -492,3 +499,4 @@ if __name__ == "__main__":
 
 	pergunta_10_qa(df)
 	df = pergunta_10_tr(df)
+	pergunta_10(df)
