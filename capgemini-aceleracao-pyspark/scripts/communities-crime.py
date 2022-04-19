@@ -482,17 +482,6 @@ def pergunta_11_tr(df):
 
 	return df
 
-def pergunta_11_tr(df):
-
-	df = df.withColumn('ViolentCrimesPerPop', F.col('ViolentCrimesPerPop').cast('double'))
-	df = df.withColumn('medFamInc', F.col('medFamInc').cast('double'))
-
-
-	df.filter(F.col('ViolentCrimesPerPop').isNull()).groupBy('ViolentCrimesPerPop').count().orderBy(F.col('count').desc()).show()
-	df.filter(F.col('medFamInc').isNull()).groupBy('medFamInc').count().orderBy(F.col('count').desc()).show()
-
-	return df
-
 
 def pergunta_11(df):
 
@@ -500,6 +489,54 @@ def pergunta_11(df):
 		
 	print(df.stat.corr('medFamInc','ViolentCrimesPerPop'))
 
+
+def pergunta_12_qa(df):
+
+	df = (df.withColumn('ViolentCrimesPerPop_qa',
+	 			F.when(
+					(F.col('ViolentCrimesPerPop').isNull()) | 
+					(F.col('ViolentCrimesPerPop') == '?'),
+				'M')
+				.when(F.col('ViolentCrimesPerPop').contains(','), 'F')
+				.when(F.col('ViolentCrimesPerPop').rlike('[^0-9.]'), 'A')))
+
+	df = df.withColumn('racepctblack_qa',
+				F.when(
+					(F.col('racepctblack').isNull()) | 
+					(F.col('racepctblack') == '?'),
+				'M')
+				.when(F.col('racepctblack').contains(','), 'F')
+				.when(F.col('racepctblack').rlike('[^0-9.]'), 'A'))
+				
+	df = (df.withColumn('racePctWhite_qa',
+	 			F.when(
+					(F.col('racePctWhite').isNull()) | 
+					(F.col('racePctWhite') == '?'),
+				'M')
+				.when(F.col('racePctWhite').contains(','), 'F')
+				.when(F.col('racePctWhite').rlike('[^0-9.]'), 'A')))
+
+	df = df.withColumn('racePctAsian_qa',
+				F.when(
+					(F.col('racePctAsian').isNull()) | 
+					(F.col('racePctAsian') == '?'),
+				'M')
+				.when(F.col('racePctAsian').contains(','), 'F')
+				.when(F.col('racePctAsian').rlike('[^0-9.]'), 'A'))
+
+	df = df.withColumn('racePctHisp_qa',
+				F.when(
+					(F.col('racePctHisp').isNull()) | 
+					(F.col('racePctHisp') == '?'),
+				'M')
+				.when(F.col('racePctHisp').contains(','), 'F')
+				.when(F.col('racePctHisp').rlike('[^0-9.]'), 'A'))
+				
+	df.groupBy('ViolentCrimesPerPop_qa').count().show()
+	df.groupBy('racepctblack_qa').count().show()
+	df.groupBy('racePctWhite_qa').count().show()
+	df.groupBy('racePctAsian_qa').count().show()
+	df.groupBy('racePctHisp_qa').count().show()
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -553,6 +590,8 @@ if __name__ == "__main__":
 	#df = pergunta_10_tr(df)
 	#pergunta_10(df)
 
-	pergunta_11_qa(df)
-	df = pergunta_11_tr(df)
-	pergunta_11(df)
+	#pergunta_11_qa(df)
+	#df = pergunta_11_tr(df)
+	#pergunta_11(df)
+
+	pergunta_12_qa(df)
