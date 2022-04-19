@@ -116,7 +116,7 @@ def pergunta_3_tr(df):
 def pergunta_3(df):
 
 	maior_populacao = (df
-				.agg({'population':'max'}))
+				.agg({'population':'max'})
 				.first()[0])
 
 	(df
@@ -274,6 +274,28 @@ def pergunta_6(df):
 	.filter(F.col('numero_jovens') == maior_n_jovens)
 	.show())
 
+
+def pergunta_7_qa(df):
+
+	df = (df.withColumn('PolicOperBudg_qa',
+	 			F.when(
+					(F.col('PolicOperBudg').isNull()) | 
+					(F.col('PolicOperBudg') == '?'),
+				'M')
+				.when(F.col('PolicOperBudg').contains(','), 'F')
+				.when(F.col('PolicOperBudg').rlike('[^0-9.]'), 'A')))
+
+	df = df.withColumn('ViolentCrimesPerPop_qa',
+				F.when(
+					(F.col('ViolentCrimesPerPop').isNull()) | 
+					(F.col('ViolentCrimesPerPop') == '?'),
+				'M')
+				.when(F.col('ViolentCrimesPerPop').contains(','), 'F')
+				.when(F.col('ViolentCrimesPerPop').rlike('[^0-9.]'), 'A'))
+				
+	df.groupBy('PolicOperBudg_qa').count().show()
+	df.groupBy('ViolentCrimesPerPop_qa').count().show()
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Communities & Crime]"))
@@ -306,6 +328,8 @@ if __name__ == "__main__":
 	#df = pergunta_5_tr(df)
 	#pergunta_5(df)
 
-	pergunta_6_qa(df)
-	df = pergunta_6_tr(df)
-	pergunta_6(df)
+	#pergunta_6_qa(df)
+	#df = pergunta_6_tr(df)
+	#pergunta_6(df)
+
+	pergunta_7_qa(df)
