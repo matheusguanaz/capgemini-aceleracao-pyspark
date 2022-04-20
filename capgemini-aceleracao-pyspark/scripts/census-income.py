@@ -45,6 +45,15 @@ def quality_education(df):
     df.groupBy('education_qa').count().show()
 
 
+def quality_education_num(df):
+
+    df = df.withColumn('education-num_qa',
+                                F.when(F.col('education-num').isNull(),'M')
+                                .when(F.col('education-num') < 0, 'N'))
+    
+    df.groupBy('education-num_qa').count().show()
+
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -86,6 +95,8 @@ if __name__ == "__main__":
 	quality_age(df)
 	quality_workclass(df)
 	quality_fnlwgt(df)
+	quality_education(df)
+	quality_education_num(df)
 
 	df = transformation_workclass(df)
 
