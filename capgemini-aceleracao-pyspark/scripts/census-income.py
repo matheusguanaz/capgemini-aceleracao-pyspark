@@ -11,6 +11,7 @@ def quality_age(df):
 
     df.groupBy('age_qa').count().show()
 
+
 def quality_workclass(df):
     workclasses = [' Private',' Self-emp-not-inc',' Self-emp-inc',' Federal-gov', 
                     ' Local-gov',' State-gov',' Without-pay',' Never-worked']
@@ -21,6 +22,15 @@ def quality_workclass(df):
 
     df.groupBy('workclass_qa').count().show()
 
+
+def quality_fnlwgt(df):
+
+    df = df.withColumn('fnlwgt_qa',
+                                F.when(F.col('fnlwgt').isNull(),'M')
+                                .when(F.col('fnlwgt') < 0, 'N'))
+    
+    df.groupBy('fnlwgt_qa').count().show()
+        
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -52,5 +62,6 @@ if __name__ == "__main__":
 	
 	quality_age(df)
 	quality_workclass(df)
+	quality_fnlwgt(df)
 
 
