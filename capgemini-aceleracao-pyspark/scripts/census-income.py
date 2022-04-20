@@ -134,6 +134,15 @@ def transformation_occupation(df):
     return df
 
 
+def transformation_relationship(df):
+
+    df = df.withColumn('relationship', F.regexp_replace('relationship',' ',''))
+
+    df.groupBy('relationship').count().show()
+
+    return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -175,5 +184,6 @@ if __name__ == "__main__":
 	df = transformation_education(df)
 	df = transformation_marital_status(df)
 	df = transformation_occupation(df)
+	df = transformation_relationship(df)
 
 
