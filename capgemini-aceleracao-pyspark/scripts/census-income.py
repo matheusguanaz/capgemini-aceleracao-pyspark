@@ -103,6 +103,16 @@ def quality_race(df):
     df.groupBy('race_qa').count().show()
 
 
+def quality_sex(df):
+    
+    sex = [' Female',' Male']
+
+    df = df.withColumn('sex_qa',
+                                F.when(F.col('sex') == ' ?','M')
+                                .when(~F.col('sex').isin(sex),'C'))
+
+    df.groupBy('sex_qa').count().show()
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -200,6 +210,7 @@ if __name__ == "__main__":
 	quality_occupation(df)
 	quality_relationship(df)
 	quality_race(df)
+	quality_sex(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
