@@ -330,6 +330,32 @@ def pergunta_6(df):
 	df.show()
 
 
+def pergunta_7(df):
+    
+	df = (df
+	.filter(F.col('occupation').isNotNull())
+	.groupBy('occupation','sex')
+	.count())
+
+	df_ocupacoes_male = df.filter(F.col('sex') == 'Male')
+	df_ocupacoes_female	= df.filter(F.col('sex') == 'Female')
+
+	df_ocupacoes = df_ocupacoes_male.alias('male').join(df_ocupacoes_female.alias('female'),
+                                                        F.col('male.occupation') == F.col('female.occupation'),
+														"inner")
+	df_ocupacoes = (df_ocupacoes
+					.select(
+						F.col('male.occupation').alias('ocupacao'),
+						F.col('male.count').alias('num_homens'),
+						F.col('female.count').alias('num_mulheres')
+					))
+	
+	df_ocupacoes = df_ocupacoes.withColumn('soma', F.col('num_homens') + F.col('num_mulheres'))
+	df_ocupacoes = df_ocupacoes.withColumn('diferenca', F.abs(F.col('num_homens') - F.col('num_mulheres')))
+
+	df_ocupacoes.orderBy(F.col('soma').desc(),F.col('diferenca').asc()).show(1)
+	
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -389,5 +415,5 @@ if __name__ == "__main__":
 	#pergunta_3(df)
 	#pergunta_4(df)
 	#pergunta_5(df)
-	pergunta_6(df)
-
+	#pergunta_6(df)
+	pergunta_7(df)
