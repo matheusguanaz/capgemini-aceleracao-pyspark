@@ -54,6 +54,18 @@ def quality_education_num(df):
     df.groupBy('education-num_qa').count().show()
 
 
+def quality_marital_status(df):
+
+    marital_status = [' Married-civ-spouse',' Divorced',' Never-married',' Separated',
+                        ' Widowed',' Married-spouse-absent',' Married-AF-spouse']    
+	
+    df = df.withColumn('marital-status_qa',
+                                        F.when(F.col('marital-status') == ' ?','M')
+                                        .when(~F.col('marital-status').isin(marital_status),'C'))
+
+    df.groupBy('marital-status_qa').count().show()   
+
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -108,6 +120,7 @@ if __name__ == "__main__":
 	quality_fnlwgt(df)
 	quality_education(df)
 	quality_education_num(df)
+	quality_marital_status(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
