@@ -278,6 +278,16 @@ def pergunta_2(df):
 	.show())
 
 
+def pergunta_3(df):
+
+    numero_homens = df.filter(F.col('sex') == 'Male').agg({'sex':'count'}).first()[0]
+    numero_mulheres = df.filter(F.col('sex') == 'Female').agg({'sex':'count'}).first()[0]
+    numero_total = df.agg({'sex':'count'}).first()[0]
+    
+    print(f"Proporção homens {((numero_homens/numero_total)*100):.2f}%")
+    print(f'Proporção mulheres {((numero_mulheres/numero_total)*100):.2f}%')
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -333,5 +343,6 @@ if __name__ == "__main__":
 	df = transformation_income(df)
 
 	#pergunta_1(df)
-	pergunta_2(df)
+	#pergunta_2(df)
+	pergunta_3(df)
 
