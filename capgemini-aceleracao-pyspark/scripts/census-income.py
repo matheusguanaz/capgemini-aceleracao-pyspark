@@ -250,6 +250,15 @@ def transformation_native_country(df):
     return df
 
 
+def transformation_income(df):
+
+    df = df.withColumn('income', F.regexp_replace('income',' ',''))
+
+    df.groupBy('income').count().show()
+
+    return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -302,5 +311,6 @@ if __name__ == "__main__":
 	df = transformation_race(df)
 	df = transformation_sex(df)
 	df = transformation_native_country(df)
+	df = transformation_income(df)
 
 
