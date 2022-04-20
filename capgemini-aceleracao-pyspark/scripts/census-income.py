@@ -270,6 +270,14 @@ def pergunta_1(df):
 	.show())
 
 
+def pergunta_2(df):
+
+	(df
+	.groupBy('race')
+	.avg('hours-per-week')
+	.show())
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -324,5 +332,6 @@ if __name__ == "__main__":
 	df = transformation_native_country(df)
 	df = transformation_income(df)
 
-	pergunta_1(df)
+	#pergunta_1(df)
+	pergunta_2(df)
 
