@@ -368,6 +368,15 @@ def pergunta_8(df):
 	df_race_education.show()
 
 
+def pergunta_9(df):
+    
+    (df
+	.filter(F.col('workclass').startswith('Self-emp'))
+	.groupBy('education','sex','race')
+	.count()
+	.orderBy(F.col('count').desc())
+	.show(1))
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -429,4 +438,5 @@ if __name__ == "__main__":
 	#pergunta_5(df)
 	#pergunta_6(df)
 	#pergunta_7(df)
-	pergunta_8(df)
+	#pergunta_8(df)
+	pergunta_9(df)
