@@ -113,6 +113,17 @@ def quality_sex(df):
 
     df.groupBy('sex_qa').count().show()
 
+
+def quality_capital_gain(df):
+
+    df = df.withColumn('capital-gain_qa',
+                                F.when(F.col('capital-gain').isNull(),'M')
+                                .when(F.col('capital-gain') < 0, 'N'))
+    
+    df.groupBy('capital-gain_qa').count().show()
+
+
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -220,6 +231,7 @@ if __name__ == "__main__":
 	quality_relationship(df)
 	quality_race(df)
 	quality_sex(df)
+	quality_capital_gain(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
