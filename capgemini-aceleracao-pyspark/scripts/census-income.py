@@ -4,6 +4,13 @@ from pyspark.sql import functions as F
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
 
 
+def quality_age(df):
+    df = df.withColumn('age_qa', 
+	                            F.when(F.col('age').isNull(), 'M')
+								.when(F.col('age') < 0 , 'N'))
+
+    df.groupBy('age_qa').count().show()
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -32,4 +39,7 @@ if __name__ == "__main__":
 		          .option("header", "true")
 		          .schema(schema_census_income)
 		          .load("./data/census-income/census-income.csv"))
-	df.show()
+	
+	quality_age(df)
+	
+
