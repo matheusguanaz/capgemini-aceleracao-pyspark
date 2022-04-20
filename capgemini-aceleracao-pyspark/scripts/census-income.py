@@ -11,5 +11,5 @@ if __name__ == "__main__":
 		          .format("csv")
 		          .option("header", "true")
 		          #.schema(schema_census_income)
-		          .load("/home/spark/capgemini-aceleracao-pyspark/data/online-retail/census-income.csv"))
-	print(df.show())
+		          .load("./data/census-income/census-income.csv"))
+	df.show()
