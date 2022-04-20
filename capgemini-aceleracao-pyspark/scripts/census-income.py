@@ -92,6 +92,17 @@ def quality_relationship(df):
     df.groupBy('relationship_qa').count().show()
 
 
+def quality_race(df):
+
+    races = [' White',' Asian-Pac-Islander',' Amer-Indian-Eskimo',' Other',' Black']
+
+    df = df.withColumn('race_qa',
+                                F.when(F.col('race') == ' ?','M')
+                                .when(~F.col('race').isin(races),'C'))
+
+    df.groupBy('race_qa').count().show()
+
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -179,6 +190,7 @@ if __name__ == "__main__":
 	quality_marital_status(df)
 	quality_occupation(df)
 	quality_relationship(df)
+	quality_race(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
