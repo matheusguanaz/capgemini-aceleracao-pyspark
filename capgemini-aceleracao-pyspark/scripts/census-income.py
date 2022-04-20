@@ -132,6 +132,15 @@ def quality_capital_loss(df):
     df.groupBy('capital-loss_qa').count().show()
 
 
+def quality_hours_per_week(df):
+
+    df = df.withColumn('hours-per-week_qa',
+                                F.when(F.col('hours-per-week').isNull(),'M')
+                                .when(F.col('hours-per-week') < 0, 'N'))
+    
+    df.groupBy('hours-per-week_qa').count().show()
+
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -241,6 +250,7 @@ if __name__ == "__main__":
 	quality_sex(df)
 	quality_capital_gain(df)
 	quality_capital_loss(df)
+	quality_hours_per_week(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
