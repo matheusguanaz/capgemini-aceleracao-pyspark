@@ -141,6 +141,22 @@ def quality_hours_per_week(df):
     df.groupBy('hours-per-week_qa').count().show()
 
 
+def quality_native_country(df):
+
+    countries = [' United-States',' Cambodia',' England',' Puerto-Rico',' Canada',
+                ' Germany',' Outlying-US(Guam-USVI-etc)',' India',' Japan',' Greece',
+                ' South',' China',' Cuba',' Iran',' Honduras',' Philippines',' Italy',
+                ' Poland',' Jamaica',' Vietnam',' Mexico',' Portugal',' Ireland',' France',
+                ' Dominican-Republic',' Laos',' Ecuador',' Taiwan',' Haiti',' Columbia',
+                ' Hungary',' Guatemala',' Nicaragua',' Scotland',' Thailand',' Yugoslavia',
+                ' El-Salvador',' Trinadad&Tobago',' Peru',' Hong',' Holand-Netherlands']
+
+    df = df.withColumn('native-country_qa',
+                                        F.when(F.col('native-country') == ' ?','M')
+                                        .when(~F.col('native-country').isin(countries),'C'))
+
+    df.groupBy('native-country_qa').count().show()
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -251,6 +267,7 @@ if __name__ == "__main__":
 	quality_capital_gain(df)
 	quality_capital_loss(df)
 	quality_hours_per_week(df)
+	quality_native_country(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
