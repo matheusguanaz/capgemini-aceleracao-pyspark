@@ -226,6 +226,18 @@ def transformation_sex(df):
     return df
 
 
+def transformation_native_country(df):
+
+    df = df.withColumn('native-country', F.regexp_replace('native-country',' ',''))
+    df = df.withColumn('native-country',
+                                F.when(F.col('native-country') == '?', None)
+                                .otherwise(F.col('native-country')))
+
+    df.groupBy('native-country').count().show()
+
+    return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -276,5 +288,6 @@ if __name__ == "__main__":
 	df = transformation_relationship(df)
 	df = transformation_race(df)
 	df = transformation_sex(df)
+	df = transformation_native_country(df)
 
 
