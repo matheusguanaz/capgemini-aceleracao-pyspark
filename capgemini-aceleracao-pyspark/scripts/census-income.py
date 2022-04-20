@@ -157,6 +157,18 @@ def quality_native_country(df):
 
     df.groupBy('native-country_qa').count().show()
 
+
+def quality_income(df):
+
+    incomes = [' >50K',' <=50K']
+
+    df = df.withColumn('income_qa',
+                                F.when(F.col('income') == ' ?','M')
+                                .when(~F.col('income').isin(incomes),'C'))
+
+    df.groupBy('income_qa').count().show()
+
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -280,6 +292,7 @@ if __name__ == "__main__":
 	quality_capital_loss(df)
 	quality_hours_per_week(df)
 	quality_native_country(df)
+	quality_income(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
