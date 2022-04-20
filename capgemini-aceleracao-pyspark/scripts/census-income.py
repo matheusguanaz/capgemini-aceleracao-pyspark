@@ -356,6 +356,18 @@ def pergunta_7(df):
 	df_ocupacoes.orderBy(F.col('soma').desc(),F.col('diferenca').asc()).show(1)
 	
 
+def pergunta_8(df):
+
+	df_education_education_num = df.groupBy('education','education-num').count()
+
+	df_race_education_num = df.groupBy('race').max('education-num')
+
+	df_race_education = (df_race_education_num.alias('ren').join(df_education_education_num.alias('een'),
+											F.col('ren.max(education-num)') == F.col('een.education-num'),
+											"left").select('ren.race','een.education'))
+	df_race_education.show()
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -416,4 +428,5 @@ if __name__ == "__main__":
 	#pergunta_4(df)
 	#pergunta_5(df)
 	#pergunta_6(df)
-	pergunta_7(df)
+	#pergunta_7(df)
+	pergunta_8(df)
