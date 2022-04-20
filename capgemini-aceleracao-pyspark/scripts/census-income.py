@@ -11,6 +11,16 @@ def quality_age(df):
 
     df.groupBy('age_qa').count().show()
 
+def quality_workclass(df):
+    workclasses = [' Private',' Self-emp-not-inc',' Self-emp-inc',' Federal-gov', 
+                    ' Local-gov',' State-gov',' Without-pay',' Never-worked']
+
+    df = df.withColumn('workclass_qa', 
+                                    F.when(F.col('workclass') == ' ?','M')
+                                    .when(~F.col('workclass').isin(workclasses),'C'))
+
+    df.groupBy('workclass_qa').count().show()
+
 
 if __name__ == "__main__":
 	sc = SparkContext()
@@ -41,5 +51,6 @@ if __name__ == "__main__":
 		          .load("./data/census-income/census-income.csv"))
 	
 	quality_age(df)
-	
+	quality_workclass(df)
+
 
