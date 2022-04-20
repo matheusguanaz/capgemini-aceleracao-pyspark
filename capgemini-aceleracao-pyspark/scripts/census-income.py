@@ -173,6 +173,15 @@ def transformation_race(df):
     return df
 
 
+def transformation_sex(df):
+
+    df = df.withColumn('sex', F.regexp_replace('sex',' ',''))
+
+    df.groupBy('sex').count().show()
+
+    return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -218,5 +227,6 @@ if __name__ == "__main__":
 	df = transformation_occupation(df)
 	df = transformation_relationship(df)
 	df = transformation_race(df)
+	df = transformation_sex(df)
 
 
