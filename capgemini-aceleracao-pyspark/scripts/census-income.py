@@ -123,6 +123,14 @@ def quality_capital_gain(df):
     df.groupBy('capital-gain_qa').count().show()
 
 
+def quality_capital_loss(df):
+
+    df = df.withColumn('capital-loss_qa',
+                                F.when(F.col('capital-loss').isNull(),'M')
+                                .when(F.col('capital-loss') < 0, 'N'))
+    
+    df.groupBy('capital-loss_qa').count().show()
+
 
 def transformation_workclass(df):
 
@@ -232,6 +240,7 @@ if __name__ == "__main__":
 	quality_race(df)
 	quality_sex(df)
 	quality_capital_gain(df)
+	quality_capital_loss(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
