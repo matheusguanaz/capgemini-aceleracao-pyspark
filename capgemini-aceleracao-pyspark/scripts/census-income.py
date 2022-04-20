@@ -259,6 +259,17 @@ def transformation_income(df):
     return df
 
 
+def pergunta_1(df):
+
+    (df
+	.select('workclass','income')
+	.filter((F.col('income') == '>50K') & F.col('workclass').isNotNull())
+	.groupBy('workclass')
+	.count()
+	.select('workclass')
+	.show())
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -287,21 +298,21 @@ if __name__ == "__main__":
 		          .schema(schema_census_income)
 		          .load("./data/census-income/census-income.csv"))
 	
-	quality_age(df)
-	quality_workclass(df)
-	quality_fnlwgt(df)
-	quality_education(df)
-	quality_education_num(df)
-	quality_marital_status(df)
-	quality_occupation(df)
-	quality_relationship(df)
-	quality_race(df)
-	quality_sex(df)
-	quality_capital_gain(df)
-	quality_capital_loss(df)
-	quality_hours_per_week(df)
-	quality_native_country(df)
-	quality_income(df)
+	#quality_age(df)
+	#quality_workclass(df)
+	#quality_fnlwgt(df)
+	#quality_education(df)
+	#quality_education_num(df)
+	#quality_marital_status(df)
+	#quality_occupation(df)
+	#quality_relationship(df)
+	#quality_race(df)
+	#quality_sex(df)
+	#quality_capital_gain(df)
+	#quality_capital_loss(df)
+	#quality_hours_per_week(df)
+	#quality_native_country(df)
+	#quality_income(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
@@ -313,4 +324,5 @@ if __name__ == "__main__":
 	df = transformation_native_country(df)
 	df = transformation_income(df)
 
+	pergunta_1(df)
 
