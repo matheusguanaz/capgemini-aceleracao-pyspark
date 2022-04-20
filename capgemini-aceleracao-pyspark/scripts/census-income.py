@@ -34,9 +34,9 @@ def quality_fnlwgt(df):
 
 def quality_education(df):
     
-    education = ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school',
-	            'Assoc-acdm', 'Assoc-voc','9th', '7th-8th', '12th', 'Masters', 
-                '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
+    education = [' Bachelors', ' Some-college', ' 11th', ' HS-grad', ' Prof-school',
+	            ' Assoc-acdm', ' Assoc-voc',' 9th', ' 7th-8th', ' 12th', ' Masters', 
+                ' 1st-4th', ' 10th', ' Doctorate', ' 5th-6th', ' Preschool']
     
     df = df.withColumn('education_qa',
                                     F.when(F.col('education') == ' ?','M')
@@ -63,7 +63,18 @@ def transformation_workclass(df):
 
     df.groupBy('workclass').count().show()
 
-    return df    
+    return df
+
+
+def transformation_education(df):
+
+    df = df.withColumn('education', F.regexp_replace('education',' ',''))
+
+    df.groupBy('education').count().show()
+
+    return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -99,5 +110,6 @@ if __name__ == "__main__":
 	quality_education_num(df)
 
 	df = transformation_workclass(df)
+	df = transformation_education(df)
 
 
