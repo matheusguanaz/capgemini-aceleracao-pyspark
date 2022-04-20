@@ -298,6 +298,20 @@ def pergunta_4(df):
     print(f'Proporção mulheres {((numero_mulheres/numero_total)*100):.2f}%')
 
 
+def pergunta_5(df):
+
+    maior_media_horas_trabalhadas_por_ocupacao = (df
+                                                .groupBy('occupation')
+                                                .avg('hours-per-week')
+                                                .orderBy(F.col('avg(hours-per-week)').desc())
+                                                .first()[1])
+
+    (df
+	.groupBy('occupation')
+	.avg('hours-per-week')
+	.filter(F.col('avg(hours-per-week)') == maior_media_horas_trabalhadas_por_ocupacao)
+	.show())
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -355,5 +369,6 @@ if __name__ == "__main__":
 	#pergunta_1(df)
 	#pergunta_2(df)
 	#pergunta_3(df)
-	pergunta_4(df)
+	#pergunta_4(df)
+	pergunta_5(df)
 
