@@ -66,6 +66,21 @@ def quality_marital_status(df):
     df.groupBy('marital-status_qa').count().show()   
 
 
+def quality_occupation(df):
+    
+    occupations = [ ' Tech-support',' Craft-repair',' Other-service',' Sales',
+	                ' Exec-managerial',' Prof-specialty',' Handlers-cleaners',
+                    ' Machine-op-inspct',' Adm-clerical',' Farming-fishing',
+                    ' Transport-moving',' Priv-house-serv',' Protective-serv',
+                    ' Armed-Forces']    
+	
+    df = df.withColumn('occupation_qa',
+                                        F.when(F.col('occupation') == ' ?','M')
+                                        .when(~F.col('occupation').isin(occupations),'C'))
+
+    df.groupBy('occupation_qa').count().show()
+
+
 def transformation_workclass(df):
 
     df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
@@ -130,6 +145,7 @@ if __name__ == "__main__":
 	quality_education(df)
 	quality_education_num(df)
 	quality_marital_status(df)
+	quality_occupation(df)
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
