@@ -312,6 +312,24 @@ def pergunta_5(df):
 	.filter(F.col('avg(hours-per-week)') == maior_media_horas_trabalhadas_por_ocupacao)
 	.show())
 
+
+def pergunta_6(df):
+
+	df = (df
+	.filter(F.col('occupation').isNotNull())
+	.groupBy('occupation','education')
+	.count())
+
+	df_ocupacoes = df.groupBy('education').max()
+
+	df = df.alias('b').join(df_ocupacoes.alias('a'),
+	            (F.col('a.education') == F.col('b.education')) &
+                (F.col('a.max(count)') == F.col('b.count')),
+				"right").select('b.education','b.occupation','b.count')
+	
+	df.show()
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -370,5 +388,6 @@ if __name__ == "__main__":
 	#pergunta_2(df)
 	#pergunta_3(df)
 	#pergunta_4(df)
-	pergunta_5(df)
+	#pergunta_5(df)
+	pergunta_6(df)
 
