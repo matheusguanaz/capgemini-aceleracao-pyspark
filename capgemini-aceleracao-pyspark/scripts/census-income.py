@@ -87,6 +87,15 @@ def transformation_education(df):
     return df
 
 
+def transformation_marital_status(df):
+
+    df = df.withColumn('marital-status', F.regexp_replace('marital-status',' ',''))
+
+    df.groupBy('marital-status').count().show()
+
+    return df
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -124,5 +133,6 @@ if __name__ == "__main__":
 
 	df = transformation_workclass(df)
 	df = transformation_education(df)
+	df = transformation_marital_status(df)
 
 
