@@ -32,6 +32,19 @@ def quality_fnlwgt(df):
     df.groupBy('fnlwgt_qa').count().show()
         
 
+def quality_education(df):
+    
+    education = ['Bachelors', 'Some-college', '11th', 'HS-grad', 'Prof-school',
+	            'Assoc-acdm', 'Assoc-voc','9th', '7th-8th', '12th', 'Masters', 
+                '1st-4th', '10th', 'Doctorate', '5th-6th', 'Preschool']
+    
+    df = df.withColumn('education_qa',
+                                    F.when(F.col('education') == ' ?','M')
+                                    .when(~F.col('education').isin(education),'C'))
+
+    df.groupBy('education_qa').count().show()
+
+
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
