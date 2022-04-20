@@ -45,6 +45,16 @@ def quality_education(df):
     df.groupBy('education_qa').count().show()
 
 
+def transformation_workclass(df):
+
+    df = df.withColumn('workclass', F.regexp_replace('workclass',' ',''))
+    df = df.withColumn('workclass',
+                                F.when(F.col('workclass') == '?', None)
+                                .otherwise(F.col('workclass')))
+
+    df.groupBy('workclass').count().show()
+
+    return df    
 if __name__ == "__main__":
 	sc = SparkContext()
 	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -76,5 +86,7 @@ if __name__ == "__main__":
 	quality_age(df)
 	quality_workclass(df)
 	quality_fnlwgt(df)
+
+	df = transformation_workclass(df)
 
 
