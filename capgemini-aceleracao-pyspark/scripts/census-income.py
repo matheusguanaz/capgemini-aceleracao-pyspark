@@ -442,6 +442,14 @@ def pergunta_14(df):
     df_nationality_income.orderBy('native-country').show()
 
 
+def pergunta_15(df):
+    
+    num_brancos = df.filter(F.col('race') == 'White').count()
+    num_nao_brancos = df.filter(F.col('race') != 'White').count()
+
+    print(f'Para cada pessoa não branca há {num_brancos/num_nao_brancos:.0f} brancos')
+
+
 if __name__ == "__main__":
     sc = SparkContext()
     spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -509,4 +517,5 @@ if __name__ == "__main__":
     #pergunta_11(df)
     #pergunta_12(df)
     #pergunta_13(df)
-    pergunta_14(df)
+    #pergunta_14(df)
+    pergunta_15(df)
