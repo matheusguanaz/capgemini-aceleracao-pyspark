@@ -415,6 +415,15 @@ def pergunta_12(df):
     .show(1))
     
     
+def pergunta_13(df):
+    
+    (df
+    .groupBy('sex','income')
+    .count()
+    .orderBy(F.col('count').desc())
+    .show(2))
+        
+    
 if __name__ == "__main__":
     sc = SparkContext()
     spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -480,4 +489,5 @@ if __name__ == "__main__":
     #pergunta_9(df)
     #pergunta_10(df)
     #pergunta_11(df)
-    pergunta_12(df)
+    #pergunta_12(df)
+    pergunta_13(df)
