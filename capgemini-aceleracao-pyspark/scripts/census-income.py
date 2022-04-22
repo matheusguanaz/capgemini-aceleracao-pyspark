@@ -424,6 +424,24 @@ def pergunta_13(df):
     .show(2))
         
     
+def pergunta_14(df):
+    
+    df_nationality_income = (df
+                        .groupBy('native-country','income')
+                        .count())
+    
+    df_nationality = df_nationality_income.groupBy('native-country').max('count')
+
+    df_nationality_income = df_nationality.alias('n').join(df_nationality_income.alias('ni'),
+                                    (
+                                        (F.col('ni.count') == F.col('n.max(count)')) & 
+                                        (F.col('ni.native-country') == F.col('n.native-country'))
+                                    ),
+                                    "left").select('ni.native-country','ni.income','ni.count')
+    
+    df_nationality_income.orderBy('native-country').show()
+
+
 if __name__ == "__main__":
     sc = SparkContext()
     spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -490,4 +508,5 @@ if __name__ == "__main__":
     #pergunta_10(df)
     #pergunta_11(df)
     #pergunta_12(df)
-    pergunta_13(df)
+    #pergunta_13(df)
+    pergunta_14(df)
