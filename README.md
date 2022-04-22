@@ -19,12 +19,26 @@ Para executar os Jupyter Notebooks deste repositório é necessário ter o [Spar
 ├── LICENSE
 ├── README.md
 ├── data                    <- Diretório contendo os dados brutos.
+│   ├── census-income
+│   │   ├── census-income.csv
+│   │   ├── census-income.names     <- Contém informações sobre os dados
+│   ├── communities-crime
+│   │   ├── communities-crime.csv
+│   │   ├── communities-crime.names <- Contém informações sobre os dados
+│   ├── online-retail
+│   │   ├── online-retail.csv
+│   │   ├── online-retail.names     <- Contém informações sobre os dados
 │   ├── airports.csv
 │   ├── planes.csv
 │   ├── flights.csv
-│
 ├── notebooks
 │   ├── 1_quality.ipynb          <- Contém apontamentos de dados inconsistêntes.
 │   ├── 2_transformation.ipynb   <- Contem tratamentos dos dados.
 │   ├── 3_report.ipynb           <- Contém respostas de negócio baseadas em dados.
+│
+├── scripts
+│   ├── README.md
+│   ├── census-income.py       <- Contém respostas de negócio baseadas em dados
+│   ├── communities-crime.py   <- Contém respostas de negócio baseadas em dados
+│   ├── online-retail.py       <- Contém respostas de negócio baseadas em dados
 ```
