@@ -386,6 +386,16 @@ def pergunta_10(df):
     print(f'Para cada pessoa casada há {num_nao_casados/num_casados:.2f} não casadas')
 
 
+def pergunta_11(df):
+    
+    (df
+    .filter(~F.col('marital-status').startswith('Married'))
+    .groupBy('race')
+    .count()
+    .orderBy(F.col('count').desc())
+    .show(1))
+
+
 if __name__ == "__main__":
     sc = SparkContext()
     spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -449,4 +459,5 @@ if __name__ == "__main__":
     #pergunta_7(df)
     #pergunta_8(df)
     #pergunta_9(df)
-    pergunta_10(df)
+    #pergunta_10(df)
+    pergunta_11(df)
