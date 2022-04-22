@@ -396,6 +396,25 @@ def pergunta_11(df):
     .show(1))
 
 
+def pergunta_12(df):
+    
+    print("Renda mais comum para pessoas não casadas")
+    (df
+    .filter(~F.col('marital-status').startswith('Married'))
+    .groupBy('income')
+    .count()
+    .orderBy(F.col('count').desc())
+    .show(1))
+    
+    print("Renda mais comum para pessoas casadas")
+    (df
+    .filter(F.col('marital-status').startswith('Married'))
+    .groupBy('income')
+    .count()
+    .orderBy(F.col('count').desc())
+    .show(1))
+    
+    
 if __name__ == "__main__":
     sc = SparkContext()
     spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
@@ -460,4 +479,5 @@ if __name__ == "__main__":
     #pergunta_8(df)
     #pergunta_9(df)
     #pergunta_10(df)
-    pergunta_11(df)
+    #pergunta_11(df)
+    pergunta_12(df)
