@@ -377,66 +377,76 @@ def pergunta_9(df):
 	.orderBy(F.col('count').desc())
 	.show(1))
 
+
+def pergunta_10(df):    
+
+    num_casados = df.filter(F.col('marital-status').startswith('Married')).agg(F.count('marital-status')).first()[0]
+    num_nao_casados = df.filter(~F.col('marital-status').startswith('Married')).agg(F.count('marital-status')).first()[0]
+
+    print(f'Para cada pessoa casada há {num_nao_casados/num_casados:.2f} não casadas')
+
+
 if __name__ == "__main__":
-	sc = SparkContext()
-	spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
+    sc = SparkContext()
+    spark = (SparkSession.builder.appName("Aceleração PySpark - Capgemini [Census Income]"))
 
-	schema_census_income = StructType([
-		StructField("age", IntegerType(), True),
-		StructField("workclass", StringType(), True),
-		StructField("fnlwgt", IntegerType(), True),
-		StructField("education", StringType(), True),
-		StructField("education-num", IntegerType(), True),
-		StructField("marital-status", StringType(), True),
-		StructField("occupation", StringType(), True),
-		StructField("relationship", StringType(), True),
-		StructField("race", StringType(), True),
-		StructField("sex", StringType(), True),
-		StructField("capital-gain", IntegerType(), True),
-		StructField("capital-loss", IntegerType(), True),
-		StructField("hours-per-week",IntegerType(), True),
-		StructField("native-country",StringType(), True),
-		StructField("income", StringType(), True)
-	])
+    schema_census_income = StructType([
+        StructField("age", IntegerType(), True),
+        StructField("workclass", StringType(), True),
+        StructField("fnlwgt", IntegerType(), True),
+        StructField("education", StringType(), True),
+        StructField("education-num", IntegerType(), True),
+        StructField("marital-status", StringType(), True),
+        StructField("occupation", StringType(), True),
+        StructField("relationship", StringType(), True),
+        StructField("race", StringType(), True),
+        StructField("sex", StringType(), True),
+        StructField("capital-gain", IntegerType(), True),
+        StructField("capital-loss", IntegerType(), True),
+        StructField("hours-per-week",IntegerType(), True),
+        StructField("native-country",StringType(), True),
+        StructField("income", StringType(), True)
+    ])
 
-	df = (spark.getOrCreate().read
-		          .format("csv")
-		          .option("header", "true")
-		          .schema(schema_census_income)
-		          .load("./data/census-income/census-income.csv"))
-	
-	#quality_age(df)
-	#quality_workclass(df)
-	#quality_fnlwgt(df)
-	#quality_education(df)
-	#quality_education_num(df)
-	#quality_marital_status(df)
-	#quality_occupation(df)
-	#quality_relationship(df)
-	#quality_race(df)
-	#quality_sex(df)
-	#quality_capital_gain(df)
-	#quality_capital_loss(df)
-	#quality_hours_per_week(df)
-	#quality_native_country(df)
-	#quality_income(df)
+    df = (spark.getOrCreate().read
+                    .format("csv")
+                    .option("header", "true")
+                    .schema(schema_census_income)
+                    .load("./data/census-income/census-income.csv"))
 
-	df = transformation_workclass(df)
-	df = transformation_education(df)
-	df = transformation_marital_status(df)
-	df = transformation_occupation(df)
-	df = transformation_relationship(df)
-	df = transformation_race(df)
-	df = transformation_sex(df)
-	df = transformation_native_country(df)
-	df = transformation_income(df)
+    #quality_age(df)
+    #quality_workclass(df)
+    #quality_fnlwgt(df)
+    #quality_education(df)
+    #quality_education_num(df)
+    #quality_marital_status(df)
+    #quality_occupation(df)
+    #quality_relationship(df)
+    #quality_race(df)
+    #quality_sex(df)
+    #quality_capital_gain(df)
+    #quality_capital_loss(df)
+    #quality_hours_per_week(df)
+    #quality_native_country(df)
+    #quality_income(df)
 
-	#pergunta_1(df)
-	#pergunta_2(df)
-	#pergunta_3(df)
-	#pergunta_4(df)
-	#pergunta_5(df)
-	#pergunta_6(df)
-	#pergunta_7(df)
-	#pergunta_8(df)
-	pergunta_9(df)
+    df = transformation_workclass(df)
+    df = transformation_education(df)
+    df = transformation_marital_status(df)
+    df = transformation_occupation(df)
+    df = transformation_relationship(df)
+    df = transformation_race(df)
+    df = transformation_sex(df)
+    df = transformation_native_country(df)
+    df = transformation_income(df)
+
+    #pergunta_1(df)
+    #pergunta_2(df)
+    #pergunta_3(df)
+    #pergunta_4(df)
+    #pergunta_5(df)
+    #pergunta_6(df)
+    #pergunta_7(df)
+    #pergunta_8(df)
+    #pergunta_9(df)
+    pergunta_10(df)
