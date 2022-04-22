@@ -654,7 +654,7 @@ if __name__ == "__main__":
                   .option("header", "true")
                   #.schema(schema_communities_crime)
                   .options(header=True, inferSChema=False)
-                  .load("/home/spark/capgemini-aceleracao-pyspark/capgemini-aceleracao-pyspark/data/communities-crime/communities-crime.csv"))
+                  .load("./data/communities-crime/communities-crime.csv"))
                   
     #df.printSchema()
 
